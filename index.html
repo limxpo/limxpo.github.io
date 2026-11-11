@@ -7,6 +7,9 @@
 
 <title>LIMBO</title>
 
+<!-- 8-BIT FONT -->
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+
 <style>
 * {
   box-sizing: border-box;
@@ -109,21 +112,27 @@ video {
 
 footer {
   text-align: center;
-  color: #888;
+  color: #fff;
   padding: 30px 15px;
   border-top: 1px solid #222;
   margin-top: 40px;
-  min-height: 100px;
+  min-height: 110px;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
 .typing-text {
-  font-size: 13px;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 11px;
+  font-weight: normal;
+  color: #fff;
   letter-spacing: 1px;
-  line-height: 1.8;
+  line-height: 2.2;
   min-height: 24px;
+  text-shadow: 0 0 5px rgba(255,255,255,0.45);
+  max-width: 100%;
+  overflow-wrap: anywhere;
 }
 
 .typing-text::after {
@@ -131,11 +140,22 @@ footer {
   margin-left: 3px;
   color: #fff;
   animation: blink 0.8s infinite;
+  text-shadow: 0 0 6px #fff;
 }
 
 @keyframes blink {
   50% {
     opacity: 0;
+  }
+}
+
+/* MOBILE */
+
+@media (max-width: 480px) {
+  .typing-text {
+    font-size: 9px;
+    line-height: 2.5;
+    letter-spacing: 0.5px;
   }
 }
 
@@ -230,7 +250,6 @@ playButton.addEventListener("click", () => {
 player.addEventListener("play", updatePlayButton);
 player.addEventListener("pause", updatePlayButton);
 player.addEventListener("ended", updatePlayButton);
-
 
 
 // TYPEWRITER FOOTER EFFECT
