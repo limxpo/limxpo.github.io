@@ -8,7 +8,9 @@
 <title>LIMBO</title>
 
 <style>
-* { box-sizing: border-box; }
+* {
+  box-sizing: border-box;
+}
 
 body {
   margin: 0;
@@ -49,101 +51,31 @@ h2 {
   border-radius: 10px;
   overflow: hidden;
   box-shadow: 0 10px 40px rgba(255,255,255,0.04);
-  isolation: isolate;
 }
 
 video {
   display: block;
   width: 100%;
+  height: auto;
   background: #080808;
-  cursor: pointer;
+  pointer-events: none;
 }
 
-/* CINEMATIC CONTROLS */
+/* MUSIC BUTTON */
 
-.cinema-controls {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 5;
-
-  display: flex;
-  align-items: center;
-  gap: 13px;
-  padding: 18px 15px 13px;
-
-  background: linear-gradient(
-    to bottom,
-    rgba(20,20,20,0.2),
-    rgba(0,0,0,0.92)
-  );
-
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(8px);
-
-  transition:
-    opacity .3s ease,
-    transform .3s ease,
-    visibility .3s ease;
-}
-
-.video-container.show-controls .cinema-controls {
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(0);
-}
-
-.control-btn {
-  border: none;
-  background: transparent;
-  color: #ddd;
-  font-size: 17px;
-  cursor: pointer;
-  padding: 5px;
-  min-width: 25px;
-  transition: 0.2s;
-}
-
-.control-btn:hover {
+.music-button {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 1001;
+  width: 42px;
+  height: 42px;
+  border: 1px solid #333;
+  border-radius: 50%;
+  background: rgba(15,15,15,0.85);
   color: #fff;
-  transform: scale(1.08);
-}
-
-.time {
-  color: #aaa;
-  font-size: 11px;
-  white-space: nowrap;
-  font-variant-numeric: tabular-nums;
-}
-
-.progress {
-  flex: 1;
-  min-width: 0;
-  height: 3px;
-  appearance: none;
-  background: #555;
-  border-radius: 10px;
+  font-size: 19px;
   cursor: pointer;
-  outline: none;
-}
-
-.progress::-webkit-slider-thumb {
-  appearance: none;
-  width: 9px;
-  height: 9px;
-  border-radius: 50%;
-  background: #fff;
-  box-shadow: 0 0 8px rgba(255,255,255,0.5);
-}
-
-.progress::-moz-range-thumb {
-  width: 9px;
-  height: 9px;
-  border: none;
-  border-radius: 50%;
-  background: #fff;
 }
 
 footer {
@@ -175,13 +107,15 @@ footer {
 
 <h2>My feelings inside</h2>
 
-<div class="video-container" id="videoContainer">
+<div class="video-container">
 
   <video
     id="player"
     autoplay
+    muted
     loop
     playsinline
+    webkit-playsinline
     preload="auto"
   >
     <source
@@ -190,32 +124,6 @@ footer {
     >
   </video>
 
-  <div class="cinema-controls" id="cinemaControls">
-
-    <button class="control-btn" id="playBtn"
-      aria-label="Play or pause">▶</button>
-
-    <span class="time" id="currentTime">0:00</span>
-
-    <input
-      class="progress"
-      id="progress"
-      type="range"
-      min="0"
-      max="100"
-      value="0"
-      aria-label="Video progress"
-    >
-
-    <span class="time" id="duration">0:00</span>
-
-    <button class="control-btn" id="muteBtn"
-      aria-label="Mute or unmute">♪</button>
-
-    <button class="control-btn" id="fullscreenBtn"
-      aria-label="Fullscreen">⛶</button>
-
-  </div>
 </div>
 
 </main>
@@ -224,201 +132,83 @@ footer {
 Sometimes he wants you to know how much he misses you.
 </footer>
 
+<audio
+  id="backgroundMusic"
+  src="music.mp3"
+  loop
+  preload="auto"
+></audio>
+
+<button
+  class="music-button"
+  id="musicButton"
+  aria-label="Bật hoặc tắt nhạc"
+>♪</button>
+
 <canvas id="snow"></canvas>
 
 <script>
 const player = document.getElementById("player");
-const playBtn = document.getElementById("playBtn");
-const muteBtn = document.getElementById("muteBtn");
-const fullscreenBtn = document.getElementById("fullscreenBtn");
-const progress = document.getElementById("progress");
-const currentTime = document.getElementById("currentTime");
-const duration = document.getElementById("duration");
-const videoContainer = document.getElementById("videoContainer");
-const cinemaControls = document.getElementById("cinemaControls");
+const music = document.getElementById("backgroundMusic");
+const musicButton = document.getElementById("musicButton");
 
-// VIDEO SOUND
+// VIDEO: ALWAYS MUTED
 
-player.muted = false;
-player.volume = 1;
+player.muted = true;
+player.defaultMuted = true;
+player.controls = false;
 
-let soundUnlocked = false;
+function playVideo() {
+  player.play().catch(() => {});
+}
 
-function unlockSound() {
-  if (soundUnlocked) return;
+playVideo();
 
-  player.muted = false;
-  player.volume = 1;
+// MUSIC
 
-  player.play().then(() => {
-    soundUnlocked = true;
-    muteBtn.textContent = "♪";
+music.volume = 0.5;
+
+function startMusic() {
+  if (!music.paused) return;
+
+  music.play().then(() => {
+    musicButton.textContent = "♫";
   }).catch(() => {
-    // Browser still blocks sound.
-    // User can press the sound button.
+    musicButton.textContent = "♪";
   });
 }
 
-// Try autoplay with sound
-player.play().catch(() => {
-  // Fallback: muted autoplay
-  player.muted = true;
-  muteBtn.textContent = "×";
+// Try autoplay music
+startMusic();
 
-  player.play().catch(() => {});
-});
+// Start music after first user interaction
+function enableMusic() {
+  startMusic();
 
-// FORMAT TIME
-
-function formatTime(seconds) {
-  if (!Number.isFinite(seconds)) return "0:00";
-
-  const min = Math.floor(seconds / 60);
-  const sec = Math.floor(seconds % 60);
-
-  return min + ":" + String(sec).padStart(2, "0");
+  if (!music.paused) {
+    document.removeEventListener("pointerdown", enableMusic);
+  }
 }
 
-// PLAY / PAUSE
+document.addEventListener("pointerdown", enableMusic);
 
-playBtn.addEventListener("click", (event) => {
+// Music toggle
+musicButton.addEventListener("click", (event) => {
   event.stopPropagation();
 
-  if (player.paused) {
-    player.play().catch(() => {});
+  if (music.paused) {
+    startMusic();
   } else {
-    player.pause();
-  }
-
-  showControls();
-});
-
-player.addEventListener("play", () => {
-  playBtn.textContent = "Ⅱ";
-});
-
-player.addEventListener("pause", () => {
-  playBtn.textContent = "▶";
-});
-
-// TIME AND PROGRESS
-
-player.addEventListener("loadedmetadata", () => {
-  duration.textContent = formatTime(player.duration);
-});
-
-player.addEventListener("timeupdate", () => {
-  currentTime.textContent = formatTime(player.currentTime);
-
-  if (Number.isFinite(player.duration) && player.duration > 0) {
-    progress.value =
-      (player.currentTime / player.duration) * 100;
+    music.pause();
+    musicButton.textContent = "♪";
   }
 });
 
-progress.addEventListener("input", () => {
-  if (Number.isFinite(player.duration)) {
-    player.currentTime =
-      (progress.value / 100) * player.duration;
+// Keep video silent
+player.addEventListener("volumechange", () => {
+  if (!player.muted) {
+    player.muted = true;
   }
-
-  showControls();
-});
-
-// MUTE
-
-muteBtn.addEventListener("click", (event) => {
-  event.stopPropagation();
-
-  player.muted = false;
-  player.volume = 1;
-
-  if (player.paused) {
-    player.play().catch(() => {});
-  }
-
-  unlockSound();
-  muteBtn.textContent = "♪";
-
-  showControls();
-});
-
-// FULLSCREEN
-
-fullscreenBtn.addEventListener("click", async (event) => {
-  event.stopPropagation();
-
-  try {
-    if (document.fullscreenElement) {
-      await document.exitFullscreen();
-    } else if (videoContainer.requestFullscreen) {
-      await videoContainer.requestFullscreen();
-    } else if (player.webkitEnterFullscreen) {
-      player.webkitEnterFullscreen();
-    }
-  } catch (error) {
-    console.log("Fullscreen unavailable", error);
-  }
-
-  showControls();
-});
-
-// AUTO HIDE CONTROLS
-
-let hideControlsTimer;
-let isInteracting = false;
-
-function showControls() {
-  videoContainer.classList.add("show-controls");
-
-  clearTimeout(hideControlsTimer);
-
-  if (isInteracting) return;
-
-  hideControlsTimer = setTimeout(() => {
-    videoContainer.classList.remove("show-controls");
-  }, 3000);
-}
-
-// TAP VIDEO
-
-player.addEventListener("click", () => {
-  unlockSound();
-
-  if (videoContainer.classList.contains("show-controls")) {
-    videoContainer.classList.remove("show-controls");
-    clearTimeout(hideControlsTimer);
-  } else {
-    showControls();
-  }
-});
-
-// INTERACTION
-
-cinemaControls.addEventListener("pointerdown", () => {
-  isInteracting = true;
-  clearTimeout(hideControlsTimer);
-});
-
-document.addEventListener("pointerup", () => {
-  if (isInteracting) {
-    isInteracting = false;
-    showControls();
-  }
-});
-
-// PAUSE / PLAY
-
-player.addEventListener("pause", showControls);
-
-player.addEventListener("play", () => {
-  clearTimeout(hideControlsTimer);
-
-  hideControlsTimer = setTimeout(() => {
-    if (!isInteracting) {
-      videoContainer.classList.remove("show-controls");
-    }
-  }, 3000);
 });
 
 // SNOW EFFECT
