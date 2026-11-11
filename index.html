@@ -51,27 +51,50 @@ h2 {
   border-radius: 10px;
   overflow: hidden;
   box-shadow: 0 10px 40px rgba(255,255,255,0.04);
+  isolation: isolate;
 }
 
 video {
   display: block;
   width: 100%;
   background: #080808;
+  cursor: pointer;
 }
 
 /* CINEMATIC TOOLBAR */
 
 .cinema-controls {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 5;
+
   display: flex;
   align-items: center;
   gap: 13px;
-  padding: 13px 15px;
+  padding: 18px 15px 13px;
+
   background: linear-gradient(
     to bottom,
-    #171717,
-    #080808
+    rgba(20,20,20,0.2),
+    rgba(0,0,0,0.92)
   );
-  border-top: 1px solid #292929;
+
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(8px);
+
+  transition:
+    opacity .3s ease,
+    transform .3s ease,
+    visibility .3s ease;
+}
+
+.video-container.show-controls .cinema-controls {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
 }
 
 .control-btn {
@@ -91,7 +114,7 @@ video {
 }
 
 .time {
-  color: #888;
+  color: #aaa;
   font-size: 11px;
   white-space: nowrap;
   font-variant-numeric: tabular-nums;
@@ -102,10 +125,11 @@ video {
   min-width: 0;
   height: 3px;
   appearance: none;
-  background: #444;
+  background: #555;
   border-radius: 10px;
   cursor: pointer;
   outline: none;
+  touch-action: pan-y;
 }
 
 .progress::-webkit-slider-thumb {
@@ -159,6 +183,14 @@ footer {
   pointer-events: none;
   z-index: 999;
 }
+
+/* REDUCE MOTION */
+
+@media (prefers-reduced-motion: reduce) {
+  .cinema-controls {
+    transition: none;
+  }
+}
 </style>
 </head>
 
@@ -185,7 +217,7 @@ footer {
     >
   </video>
 
-  <div class="cinema-controls">
+  <div class="cinema-controls" id="cinemaControls">
 
     <button class="control-btn" id="playBtn"
       aria-label="Play or pause">▶</button>
@@ -230,6 +262,9 @@ const progress = document.getElementById("progress");
 const currentTime = document.getElementById("currentTime");
 const duration = document.getElementById("duration");
 const videoContainer = document.getElementById("videoContainer");
+const cinemaControls = document.getElementById("cinemaControls");
+
+// FORMAT TIME
 
 function formatTime(seconds) {
   if (!Number.isFinite(seconds)) return "0:00";
@@ -242,12 +277,16 @@ function formatTime(seconds) {
 
 // PLAY / PAUSE
 
-playBtn.addEventListener("click", () => {
+playBtn.addEventListener("click", (event) => {
+  event.stopPropagation();
+
   if (player.paused) {
     player.play().catch(() => {});
   } else {
     player.pause();
   }
+
+  showControls();
 });
 
 player.addEventListener("play", () => {
@@ -278,18 +317,26 @@ progress.addEventListener("input", () => {
     player.currentTime =
       (progress.value / 100) * player.duration;
   }
+
+  showControls();
 });
 
 // MUTE
 
-muteBtn.addEventListener("click", () => {
+muteBtn.addEventListener("click", (event) => {
+  event.stopPropagation();
+
   player.muted = !player.muted;
   muteBtn.textContent = player.muted ? "×" : "♪";
+
+  showControls();
 });
 
 // FULLSCREEN
 
-fullscreenBtn.addEventListener("click", async () => {
+fullscreenBtn.addEventListener("click", async (event) => {
+  event.stopPropagation();
+
   try {
     if (document.fullscreenElement) {
       await document.exitFullscreen();
@@ -301,6 +348,73 @@ fullscreenBtn.addEventListener("click", async () => {
   } catch (error) {
     console.log("Fullscreen unavailable", error);
   }
+
+  showControls();
+});
+
+// AUTO HIDE CONTROLS
+
+let hideControlsTimer;
+let isInteracting = false;
+
+function showControls() {
+  videoContainer.classList.add("show-controls");
+
+  clearTimeout(hideControlsTimer);
+
+  if (isInteracting) return;
+
+  hideControlsTimer = setTimeout(() => {
+    videoContainer.classList.remove("show-controls");
+  }, 3000);
+}
+
+// TAP VIDEO
+
+player.addEventListener("click", () => {
+  if (videoContainer.classList.contains("show-controls")) {
+    videoContainer.classList.remove("show-controls");
+    clearTimeout(hideControlsTimer);
+  } else {
+    showControls();
+  }
+});
+
+// INTERACT WITH TOOLBAR
+
+cinemaControls.addEventListener("pointerdown", () => {
+  isInteracting = true;
+  clearTimeout(hideControlsTimer);
+});
+
+document.addEventListener("pointerup", () => {
+  if (isInteracting) {
+    isInteracting = false;
+    showControls();
+  }
+});
+
+cinemaControls.addEventListener("pointermove", () => {
+  if (isInteracting) {
+    clearTimeout(hideControlsTimer);
+  }
+});
+
+// SHOW CONTROLS WHEN PAUSED
+
+player.addEventListener("pause", () => {
+  showControls();
+});
+
+// HIDE WHEN PLAYING
+
+player.addEventListener("play", () => {
+  clearTimeout(hideControlsTimer);
+  hideControlsTimer = setTimeout(() => {
+    if (!isInteracting) {
+      videoContainer.classList.remove("show-controls");
+    }
+  }, 3000);
 });
 
 // SNOW EFFECT
@@ -349,7 +463,10 @@ function animate() {
   requestAnimationFrame(animate);
 }
 
-window.addEventListener("resize", resize);
+window.addEventListener("resize", () => {
+  resize();
+  createFlakes();
+});
 
 resize();
 createFlakes();
