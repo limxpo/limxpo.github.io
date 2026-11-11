@@ -36,12 +36,93 @@ main {
 h2 {
   font-size: 20px;
   margin-top: 30px;
+  font-weight: 500;
+  letter-spacing: 1px;
+}
+
+/* VIDEO PLAYER */
+
+.video-container {
+  position: relative;
+  width: 100%;
+  margin-top: 16px;
+  background: #080808;
+  border: 1px solid #252525;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 10px 40px rgba(255,255,255,0.04);
 }
 
 video {
+  display: block;
   width: 100%;
-  background: #111;
-  border-radius: 8px;
+  background: #080808;
+}
+
+/* CINEMATIC TOOLBAR */
+
+.cinema-controls {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding: 13px 15px;
+  background: linear-gradient(
+    to bottom,
+    #171717,
+    #080808
+  );
+  border-top: 1px solid #292929;
+}
+
+.control-btn {
+  border: none;
+  background: transparent;
+  color: #ddd;
+  font-size: 17px;
+  cursor: pointer;
+  padding: 5px;
+  min-width: 25px;
+  transition: 0.2s;
+}
+
+.control-btn:hover {
+  color: #fff;
+  transform: scale(1.08);
+}
+
+.time {
+  color: #888;
+  font-size: 11px;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.progress {
+  flex: 1;
+  min-width: 0;
+  height: 3px;
+  appearance: none;
+  background: #444;
+  border-radius: 10px;
+  cursor: pointer;
+  outline: none;
+}
+
+.progress::-webkit-slider-thumb {
+  appearance: none;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0 8px rgba(255,255,255,0.5);
+}
+
+.progress::-moz-range-thumb {
+  width: 9px;
+  height: 9px;
+  border: none;
+  border-radius: 50%;
+  background: #fff;
 }
 
 .video-card {
@@ -67,47 +148,9 @@ footer {
   border-top: 1px solid #222;
   margin-top: 40px;
 }
-</style>
-</head>
 
-<body>
+/* SNOW */
 
-<header>LIMBO</header>
-
-<main>
-
- <h2>My feelings inside</h2>
-
-  <video
-    id="player"
-  autoplay
-  loop
-  playsinline
-  controls
-  preload="auto"
->
-  <source src="snaptik.vn_7616757629498494241.mp4" type="video/mp4">
-  </video>
-
-</main>
-
-<footer>
-Sometimes he wants you to know how much he misses you.
-</footer>
-
-<script>
-function playVideo(src) {
-  const player = document.getElementById("player");
-  player.src = src;
-  player.load();
-  player.play();
-}
-</script>
-
-  
-<canvas id="snow"></canvas>
-
-<style>
 #snow {
   position: fixed;
   inset: 0;
@@ -117,8 +160,151 @@ function playVideo(src) {
   z-index: 999;
 }
 </style>
+</head>
+
+<body>
+
+<header>LIMBO</header>
+
+<main>
+
+<h2>My feelings inside</h2>
+
+<div class="video-container" id="videoContainer">
+
+  <video
+    id="player"
+    autoplay
+    loop
+    playsinline
+    preload="auto"
+  >
+    <source
+      src="snaptik.vn_7616757629498494241.mp4"
+      type="video/mp4"
+    >
+  </video>
+
+  <div class="cinema-controls">
+
+    <button class="control-btn" id="playBtn"
+      aria-label="Play or pause">▶</button>
+
+    <span class="time" id="currentTime">0:00</span>
+
+    <input
+      class="progress"
+      id="progress"
+      type="range"
+      min="0"
+      max="100"
+      value="0"
+      aria-label="Video progress"
+    >
+
+    <span class="time" id="duration">0:00</span>
+
+    <button class="control-btn" id="muteBtn"
+      aria-label="Mute or unmute">♪</button>
+
+    <button class="control-btn" id="fullscreenBtn"
+      aria-label="Fullscreen">⛶</button>
+
+  </div>
+</div>
+
+</main>
+
+<footer>
+Sometimes he wants you to know how much he misses you.
+</footer>
+
+<canvas id="snow"></canvas>
 
 <script>
+const player = document.getElementById("player");
+const playBtn = document.getElementById("playBtn");
+const muteBtn = document.getElementById("muteBtn");
+const fullscreenBtn = document.getElementById("fullscreenBtn");
+const progress = document.getElementById("progress");
+const currentTime = document.getElementById("currentTime");
+const duration = document.getElementById("duration");
+const videoContainer = document.getElementById("videoContainer");
+
+function formatTime(seconds) {
+  if (!Number.isFinite(seconds)) return "0:00";
+
+  const min = Math.floor(seconds / 60);
+  const sec = Math.floor(seconds % 60);
+
+  return min + ":" + String(sec).padStart(2, "0");
+}
+
+// PLAY / PAUSE
+
+playBtn.addEventListener("click", () => {
+  if (player.paused) {
+    player.play().catch(() => {});
+  } else {
+    player.pause();
+  }
+});
+
+player.addEventListener("play", () => {
+  playBtn.textContent = "Ⅱ";
+});
+
+player.addEventListener("pause", () => {
+  playBtn.textContent = "▶";
+});
+
+// TIME AND PROGRESS
+
+player.addEventListener("loadedmetadata", () => {
+  duration.textContent = formatTime(player.duration);
+});
+
+player.addEventListener("timeupdate", () => {
+  currentTime.textContent = formatTime(player.currentTime);
+
+  if (Number.isFinite(player.duration) && player.duration > 0) {
+    progress.value =
+      (player.currentTime / player.duration) * 100;
+  }
+});
+
+progress.addEventListener("input", () => {
+  if (Number.isFinite(player.duration)) {
+    player.currentTime =
+      (progress.value / 100) * player.duration;
+  }
+});
+
+// MUTE
+
+muteBtn.addEventListener("click", () => {
+  player.muted = !player.muted;
+  muteBtn.textContent = player.muted ? "×" : "♪";
+});
+
+// FULLSCREEN
+
+fullscreenBtn.addEventListener("click", async () => {
+  try {
+    if (document.fullscreenElement) {
+      await document.exitFullscreen();
+    } else if (videoContainer.requestFullscreen) {
+      await videoContainer.requestFullscreen();
+    } else if (player.webkitEnterFullscreen) {
+      player.webkitEnterFullscreen();
+    }
+  } catch (error) {
+    console.log("Fullscreen unavailable", error);
+  }
+});
+
+// SNOW EFFECT
+
 const canvas = document.getElementById("snow");
 const ctx = canvas.getContext("2d");
 
@@ -163,14 +349,12 @@ function animate() {
   requestAnimationFrame(animate);
 }
 
-window.addEventListener("resize", () => {
-  resize();
-});
+window.addEventListener("resize", resize);
 
 resize();
 createFlakes();
 animate();
 </script>
-  
+
 </body>
 </html>
