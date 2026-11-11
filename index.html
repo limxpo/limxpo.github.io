@@ -232,8 +232,8 @@ player.addEventListener("pause", updatePlayButton);
 player.addEventListener("ended", updatePlayButton);
 
 
-// TYPEWRITER FOOTER EFFECT
 
+// TYPEWRITER FOOTER EFFECT
 
 const typingText = document.getElementById("typingText");
 
@@ -256,12 +256,14 @@ function typeMessage() {
 
     setTimeout(typeMessage, 100);
   } else {
+    const isLastMessage = messageIndex === messages.length - 1;
+
     setTimeout(() => {
       messageIndex = (messageIndex + 1) % messages.length;
       charIndex = 0;
       typingText.textContent = "";
       typeMessage();
-    }, 3000);
+    }, isLastMessage ? 5000 : 3000);
   }
 }
 
