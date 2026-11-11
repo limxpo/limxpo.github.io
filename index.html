@@ -8,9 +8,7 @@
 <title>LIMBO</title>
 
 <style>
-* {
-  box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
 body {
   margin: 0;
@@ -40,7 +38,7 @@ h2 {
   letter-spacing: 1px;
 }
 
-/* VIDEO PLAYER */
+/* VIDEO */
 
 .video-container {
   position: relative;
@@ -61,7 +59,7 @@ video {
   cursor: pointer;
 }
 
-/* CINEMATIC TOOLBAR */
+/* CINEMATIC CONTROLS */
 
 .cinema-controls {
   position: absolute;
@@ -129,7 +127,6 @@ video {
   border-radius: 10px;
   cursor: pointer;
   outline: none;
-  touch-action: pan-y;
 }
 
 .progress::-webkit-slider-thumb {
@@ -149,22 +146,6 @@ video {
   background: #fff;
 }
 
-.video-card {
-  background: #111;
-  padding: 12px;
-  margin-top: 12px;
-  border-radius: 8px;
-  cursor: pointer;
-}
-
-.video-card:hover {
-  background: #222;
-}
-
-.video-card p {
-  margin: 5px 0;
-}
-
 footer {
   text-align: center;
   color: #666;
@@ -182,14 +163,6 @@ footer {
   height: 100%;
   pointer-events: none;
   z-index: 999;
-}
-
-/* REDUCE MOTION */
-
-@media (prefers-reduced-motion: reduce) {
-  .cinema-controls {
-    transition: none;
-  }
 }
 </style>
 </head>
@@ -264,6 +237,37 @@ const duration = document.getElementById("duration");
 const videoContainer = document.getElementById("videoContainer");
 const cinemaControls = document.getElementById("cinemaControls");
 
+// VIDEO SOUND
+
+player.muted = false;
+player.volume = 1;
+
+let soundUnlocked = false;
+
+function unlockSound() {
+  if (soundUnlocked) return;
+
+  player.muted = false;
+  player.volume = 1;
+
+  player.play().then(() => {
+    soundUnlocked = true;
+    muteBtn.textContent = "♪";
+  }).catch(() => {
+    // Browser still blocks sound.
+    // User can press the sound button.
+  });
+}
+
+// Try autoplay with sound
+player.play().catch(() => {
+  // Fallback: muted autoplay
+  player.muted = true;
+  muteBtn.textContent = "×";
+
+  player.play().catch(() => {});
+});
+
 // FORMAT TIME
 
 function formatTime(seconds) {
@@ -326,8 +330,15 @@ progress.addEventListener("input", () => {
 muteBtn.addEventListener("click", (event) => {
   event.stopPropagation();
 
-  player.muted = !player.muted;
-  muteBtn.textContent = player.muted ? "×" : "♪";
+  player.muted = false;
+  player.volume = 1;
+
+  if (player.paused) {
+    player.play().catch(() => {});
+  }
+
+  unlockSound();
+  muteBtn.textContent = "♪";
 
   showControls();
 });
@@ -372,6 +383,8 @@ function showControls() {
 // TAP VIDEO
 
 player.addEventListener("click", () => {
+  unlockSound();
+
   if (videoContainer.classList.contains("show-controls")) {
     videoContainer.classList.remove("show-controls");
     clearTimeout(hideControlsTimer);
@@ -380,7 +393,7 @@ player.addEventListener("click", () => {
   }
 });
 
-// INTERACT WITH TOOLBAR
+// INTERACTION
 
 cinemaControls.addEventListener("pointerdown", () => {
   isInteracting = true;
@@ -394,22 +407,13 @@ document.addEventListener("pointerup", () => {
   }
 });
 
-cinemaControls.addEventListener("pointermove", () => {
-  if (isInteracting) {
-    clearTimeout(hideControlsTimer);
-  }
-});
+// PAUSE / PLAY
 
-// SHOW CONTROLS WHEN PAUSED
-
-player.addEventListener("pause", () => {
-  showControls();
-});
-
-// HIDE WHEN PLAYING
+player.addEventListener("pause", showControls);
 
 player.addEventListener("play", () => {
   clearTimeout(hideControlsTimer);
+
   hideControlsTimer = setTimeout(() => {
     if (!isInteracting) {
       videoContainer.classList.remove("show-controls");
