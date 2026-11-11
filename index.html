@@ -1,66 +1,115 @@
-<canvas id="snow"></canvas>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>BLACKFRAME</title>
 
 <style>
-#snow {
-  position: fixed;
-  inset: 0;
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: #000;
+  color: #fff;
+  font-family: Arial, sans-serif;
+}
+
+header {
+  padding: 22px;
+  border-bottom: 1px solid #222;
+  font-size: 22px;
+  font-weight: bold;
+  letter-spacing: 3px;
+}
+
+main {
+  max-width: 900px;
+  margin: auto;
+  padding: 22px;
+}
+
+h2 {
+  font-size: 20px;
+  margin-top: 30px;
+}
+
+video {
   width: 100%;
-  height: 100%;
-  pointer-events: none;
-  z-index: 999;
+  background: #111;
+  border-radius: 8px;
+}
+
+.video-card {
+  background: #111;
+  padding: 12px;
+  margin-top: 12px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.video-card:hover {
+  background: #222;
+}
+
+.video-card p {
+  margin: 5px 0;
+}
+
+footer {
+  text-align: center;
+  color: #666;
+  padding: 30px;
+  border-top: 1px solid #222;
+  margin-top: 40px;
 }
 </style>
+</head>
+
+<body>
+
+<header>BLACKFRAME</header>
+
+<main>
+
+<h2>Featured Video</h2>
+
+<video id="player" controls playsinline>
+  <source src="videos/video1.mp4" type="video/mp4">
+</video>
+
+<h2>Latest Videos</h2>
+
+<div class="video-card"
+onclick="playVideo('videos/video1.mp4')">
+  <p>Video 01</p>
+  <small>Watch video</small>
+</div>
+
+<div class="video-card"
+onclick="playVideo('videos/video2.mp4')">
+  <p>Video 02</p>
+  <small>Watch video</small>
+</div>
+
+</main>
+
+<footer>
+© 2026 BLACKFRAME
+</footer>
 
 <script>
-const canvas = document.getElementById("snow");
-const ctx = canvas.getContext("2d");
-
-let flakes = [];
-
-function resize() {
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
+function playVideo(src) {
+  const player = document.getElementById("player");
+  player.src = src;
+  player.load();
+  player.play();
 }
-
-function createFlakes() {
-  flakes = Array.from({length: 45}, () => ({
-    x: Math.random() * canvas.width,
-    y: Math.random() * canvas.height,
-    r: Math.random() * 1.8 + 0.5,
-    speed: Math.random() * 0.6 + 0.3,
-    drift: Math.random() * 0.4 - 0.2
-  }));
-}
-
-function animate() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-  flakes.forEach(f => {
-    ctx.beginPath();
-    ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
-    ctx.fillStyle = "rgba(255,255,255,0.65)";
-    ctx.fill();
-
-    f.y += f.speed;
-    f.x += f.drift;
-
-    if (f.y > canvas.height) {
-      f.y = -5;
-      f.x = Math.random() * canvas.width;
-    }
-
-    if (f.x > canvas.width) f.x = 0;
-    if (f.x < 0) f.x = canvas.width;
-  });
-
-  requestAnimationFrame(animate);
-}
-
-window.addEventListener("resize", () => {
-  resize();
-});
-
-resize();
-createFlakes();
-animate();
 </script>
+
+</body>
+</html>
