@@ -16,21 +16,108 @@
   box-sizing: border-box;
 }
 
+:root {
+  --text: #eeeeF2;
+  --muted: #aaaab5;
+  --border: #222228;
+}
+
+html {
+  background: #000;
+}
+
 body {
   margin: 0;
   background: #000;
-  color: #fff;
+  color: var(--text);
   font-family: Arial, sans-serif;
+  overflow-x: hidden;
 }
 
-/* FADE IN */
+/* =========================
+   INTRO LOADING
+========================= */
+
+#intro {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  background: #000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: opacity 1.3s ease, visibility 1.3s ease;
+}
+
+#intro.hide {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.intro-content {
+  text-align: center;
+  animation: introReveal 1.8s ease both;
+}
+
+.intro-title {
+  font-family: Arial, sans-serif;
+  font-size: 27px;
+  font-weight: bold;
+  letter-spacing: 9px;
+  color: #eee;
+  text-shadow: 0 0 20px rgba(255,255,255,0.15);
+}
+
+.intro-line {
+  width: 0;
+  height: 1px;
+  background: #aaa;
+  margin: 20px auto;
+  animation: lineReveal 1.8s ease forwards;
+}
+
+.intro-subtitle {
+  font-family: 'Manrope', sans-serif;
+  font-size: 10px;
+  letter-spacing: 4px;
+  color: #777;
+  opacity: 0;
+  animation: subtitleReveal 1.5s ease 0.7s forwards;
+}
+
+@keyframes introReveal {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes lineReveal {
+  to {
+    width: 85px;
+  }
+}
+
+@keyframes subtitleReveal {
+  to {
+    opacity: 1;
+  }
+}
+
+/* =========================
+   FADE IN
+========================= */
 
 @keyframes fadeIn {
   from {
     opacity: 0;
     transform: translateY(15px);
   }
-
   to {
     opacity: 1;
     transform: translateY(0);
@@ -39,11 +126,12 @@ body {
 
 header {
   padding: 22px;
-  border-bottom: 1px solid #222;
+  border-bottom: 1px solid var(--border);
   font-family: Arial, sans-serif;
   font-size: 22px;
   font-weight: bold;
   letter-spacing: 3px;
+  text-shadow: 0 0 15px rgba(255,255,255,0.12);
 
   animation: fadeIn 1.2s ease both;
   animation-delay: 0.1s;
@@ -55,7 +143,9 @@ main {
   padding: 22px;
 }
 
-/* MAIN TITLE */
+/* =========================
+   MAIN TITLE
+========================= */
 
 h2 {
   font-family: Arial, sans-serif;
@@ -63,12 +153,16 @@ h2 {
   margin-top: 30px;
   font-weight: 500;
   letter-spacing: 1px;
+  color: #e5e5e9;
+  text-shadow: 0 0 12px rgba(255,255,255,0.12);
 
   animation: fadeIn 1.2s ease both;
   animation-delay: 0.4s;
 }
 
-/* VIDEO */
+/* =========================
+   VIDEO
+========================= */
 
 .video-container {
   position: relative;
@@ -78,7 +172,10 @@ h2 {
   border: 1px solid #252525;
   border-radius: 10px;
   overflow: hidden;
-  box-shadow: 0 10px 40px rgba(255,255,255,0.04);
+
+  box-shadow:
+    0 10px 40px rgba(255,255,255,0.04),
+    0 0 25px rgba(255,255,255,0.015);
 
   animation: fadeIn 1.5s ease both;
   animation-delay: 0.8s;
@@ -116,6 +213,7 @@ video {
   justify-content: center;
   align-items: center;
   padding: 0 0 0 4px;
+
   border: 1px solid rgba(255,255,255,0.65);
   border-radius: 50%;
   background: rgba(0,0,0,0.35);
@@ -136,15 +234,18 @@ video {
   transform: scale(0.94);
 }
 
-/* FOOTER */
+/* =========================
+   FOOTER
+========================= */
 
 footer {
   text-align: center;
   color: #fff;
   padding: 30px 15px;
-  border-top: 1px solid #222;
+  border-top: 1px solid var(--border);
   margin-top: 40px;
   min-height: 110px;
+
   display: flex;
   justify-content: center;
   align-items: center;
@@ -180,17 +281,45 @@ footer {
   }
 }
 
-/* MOBILE */
+/* =========================
+   FILM GRAIN
+========================= */
 
-@media (max-width: 480px) {
-  .typing-text {
-    font-size: 14px;
-    letter-spacing: 0.7px;
-    line-height: 2.1;
+#filmGrain {
+  position: fixed;
+  inset: -50%;
+  width: 200%;
+  height: 200%;
+  pointer-events: none;
+  z-index: 998;
+  opacity: 0.075;
+
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.55'/%3E%3C/svg%3E");
+
+  animation: grainMove .22s steps(2) infinite;
+}
+
+@keyframes grainMove {
+  0% {
+    transform: translate(0,0);
+  }
+  25% {
+    transform: translate(-2%,2%);
+  }
+  50% {
+    transform: translate(2%,-1%);
+  }
+  75% {
+    transform: translate(-1%,-2%);
+  }
+  100% {
+    transform: translate(2%,1%);
   }
 }
 
-/* SNOW */
+/* =========================
+   SNOW
+========================= */
 
 #snow {
   position: fixed;
@@ -200,52 +329,132 @@ footer {
   pointer-events: none;
   z-index: 999;
 }
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 480px) {
+  header {
+    font-size: 20px;
+  }
+
+  h2 {
+    font-size: 18px;
+  }
+
+  .typing-text {
+    font-size: 14px;
+    letter-spacing: 0.7px;
+    line-height: 2.1;
+  }
+
+  .play-button {
+    width: 60px;
+    height: 60px;
+  }
+
+  .intro-title {
+    font-size: 23px;
+  }
+}
+
+/* REDUCED MOTION */
+
+@media (prefers-reduced-motion: reduce) {
+  #filmGrain {
+    animation: none;
+  }
+
+  *, *::before, *::after {
+    scroll-behavior: auto !important;
+  }
+}
 </style>
 </head>
 
 <body>
 
+<!-- INTRO LOADING -->
+
+<div id="intro">
+  <div class="intro-content">
+    <div class="intro-title">LIMBO</div>
+    <div class="intro-line"></div>
+    <div class="intro-subtitle">A PLACE BETWEEN FEELINGS</div>
+  </div>
+</div>
+
+<!-- FILM GRAIN -->
+
+<div id="filmGrain"></div>
+
+<!-- HEADER -->
+
 <header>LIMBO</header>
 
 <main>
 
-<h2>My feelings inside</h2>
+  <h2>My feelings inside</h2>
 
-<div class="video-container" id="videoContainer">
+  <!-- VIDEO -->
 
-  <video
-    id="player"
-    loop
-    playsinline
-    preload="auto"
-  >
-    <source
-      src="snaptik.vn_7616757629498494241.mp4"
-      type="video/mp4"
+  <div class="video-container" id="videoContainer">
+
+    <video
+      id="player"
+      loop
+      playsinline
+      preload="auto"
     >
-  </video>
+      <source
+        src="snaptik.vn_7616757629498494241.mp4"
+        type="video/mp4"
+      >
+    </video>
 
-  <div class="play-overlay" id="playOverlay">
-    <button
-      class="play-button"
-      id="playButton"
-      aria-label="Play video"
-    >▶</button>
+    <div class="play-overlay" id="playOverlay">
+
+      <button
+        class="play-button"
+        id="playButton"
+        aria-label="Play video"
+      >▶</button>
+
+    </div>
+
   </div>
 
-</div>
-
 </main>
+
+<!-- FOOTER -->
 
 <footer>
   <div class="typing-text" id="typingText"></div>
 </footer>
 
+<!-- SNOW -->
+
 <canvas id="snow"></canvas>
 
 <script>
 
-// VIDEO WITH ORIGINAL SOUND
+/* =========================
+   INTRO LOADING
+========================= */
+
+const intro = document.getElementById("intro");
+
+window.addEventListener("load", () => {
+  setTimeout(() => {
+    intro.classList.add("hide");
+  }, 2200);
+});
+
+
+/* =========================
+   VIDEO WITH ORIGINAL SOUND
+========================= */
 
 const player = document.getElementById("player");
 const playButton = document.getElementById("playButton");
@@ -258,20 +467,32 @@ player.controls = false;
 function updatePlayButton() {
   if (player.paused || player.ended) {
     playOverlay.classList.remove("hidden");
+    playButton.textContent = "▶";
+    playButton.setAttribute("aria-label", "Play video");
   } else {
     playOverlay.classList.add("hidden");
+    playButton.textContent = "Ⅱ";
+    playButton.setAttribute("aria-label", "Pause video");
   }
 }
 
 playButton.addEventListener("click", () => {
+
   if (player.paused) {
+
     player.muted = false;
 
     player.play().catch(error => {
       console.log("Video playback failed:", error);
       playOverlay.classList.remove("hidden");
     });
+
+  } else {
+
+    player.pause();
+
   }
+
 });
 
 player.addEventListener("play", updatePlayButton);
@@ -279,7 +500,9 @@ player.addEventListener("pause", updatePlayButton);
 player.addEventListener("ended", updatePlayButton);
 
 
-// TYPEWRITER EFFECT
+/* =========================
+   ADVANCED TYPEWRITER
+========================= */
 
 const typingText = document.getElementById("typingText");
 
@@ -292,33 +515,69 @@ const messages = [
 
 let messageIndex = 0;
 let charIndex = 0;
+let deleting = false;
+
+const typingSpeed = 115;
+const deletingSpeed = 45;
+const pauseAfterTyping = 2500;
+const pauseAfterDeleting = 650;
 
 function typeMessage() {
+
   const currentMessage = messages[messageIndex];
 
-  if (charIndex < currentMessage.length) {
-    typingText.textContent += currentMessage.charAt(charIndex);
+  if (!deleting) {
+
+    typingText.textContent =
+      currentMessage.substring(0, charIndex + 1);
+
     charIndex++;
 
-    setTimeout(typeMessage, 125);
+    if (charIndex === currentMessage.length) {
+
+      deleting = true;
+
+      setTimeout(typeMessage, pauseAfterTyping);
+
+    } else {
+
+      setTimeout(typeMessage, typingSpeed);
+
+    }
+
   } else {
-    setTimeout(() => {
+
+    typingText.textContent =
+      currentMessage.substring(0, charIndex - 1);
+
+    charIndex--;
+
+    if (charIndex === 0) {
+
+      deleting = false;
+
       messageIndex = (messageIndex + 1) % messages.length;
-      charIndex = 0;
-      typingText.textContent = "";
-      typeMessage();
-    }, 5000);
+
+      setTimeout(typeMessage, pauseAfterDeleting);
+
+    } else {
+
+      setTimeout(typeMessage, deletingSpeed);
+
+    }
+
   }
+
 }
 
-// Start typing after page content has loaded
-
 window.addEventListener("load", () => {
-  typeMessage();
+  setTimeout(typeMessage, 2800);
 });
 
 
-// SNOW EFFECT
+/* =========================
+   SNOW EFFECT
+========================= */
 
 const canvas = document.getElementById("snow");
 const ctx = canvas.getContext("2d");
@@ -326,47 +585,86 @@ const ctx = canvas.getContext("2d");
 let flakes = [];
 
 function resize() {
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
+
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+  canvas.width = window.innerWidth * dpr;
+  canvas.height = window.innerHeight * dpr;
+
+  canvas.style.width = window.innerWidth + "px";
+  canvas.style.height = window.innerHeight + "px";
+
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
 }
 
 function createFlakes() {
+
   flakes = Array.from({length: 45}, () => ({
-    x: Math.random() * canvas.width,
-    y: Math.random() * canvas.height,
+
+    x: Math.random() * window.innerWidth,
+    y: Math.random() * window.innerHeight,
+
     r: Math.random() * 1.8 + 0.5,
+
     speed: Math.random() * 0.6 + 0.3,
+
     drift: Math.random() * 0.4 - 0.2
+
   }));
+
 }
 
 function animate() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  ctx.clearRect(
+    0,
+    0,
+    window.innerWidth,
+    window.innerHeight
+  );
 
   flakes.forEach(f => {
+
     ctx.beginPath();
-    ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
+
+    ctx.arc(
+      f.x,
+      f.y,
+      f.r,
+      0,
+      Math.PI * 2
+    );
+
     ctx.fillStyle = "rgba(255,255,255,0.65)";
+
     ctx.fill();
 
     f.y += f.speed;
     f.x += f.drift;
 
-    if (f.y > canvas.height) {
+    if (f.y > window.innerHeight) {
+
       f.y = -5;
-      f.x = Math.random() * canvas.width;
+      f.x = Math.random() * window.innerWidth;
+
     }
 
-    if (f.x > canvas.width) f.x = 0;
-    if (f.x < 0) f.x = canvas.width;
+    if (f.x > window.innerWidth) f.x = 0;
+
+    if (f.x < 0) f.x = window.innerWidth;
+
   });
 
   requestAnimationFrame(animate);
+
 }
 
 window.addEventListener("resize", () => {
+
   resize();
   createFlakes();
+
 });
 
 resize();
