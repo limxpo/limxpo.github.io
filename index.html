@@ -34,9 +34,7 @@ body {
   overflow-x: hidden;
 }
 
-/* =========================
-   INTRO LOADING
-========================= */
+/* INTRO LOADING */
 
 #intro {
   position: fixed;
@@ -109,9 +107,7 @@ body {
   }
 }
 
-/* =========================
-   FADE IN
-========================= */
+/* FADE IN */
 
 @keyframes fadeIn {
   from {
@@ -132,7 +128,6 @@ header {
   font-weight: bold;
   letter-spacing: 3px;
   text-shadow: 0 0 15px rgba(255,255,255,0.12);
-
   animation: fadeIn 1.2s ease both;
   animation-delay: 0.1s;
 }
@@ -143,9 +138,7 @@ main {
   padding: 22px;
 }
 
-/* =========================
-   MAIN TITLE
-========================= */
+/* MAIN TITLE */
 
 h2 {
   font-family: Arial, sans-serif;
@@ -155,14 +148,11 @@ h2 {
   letter-spacing: 1px;
   color: #e5e5e9;
   text-shadow: 0 0 12px rgba(255,255,255,0.12);
-
   animation: fadeIn 1.2s ease both;
   animation-delay: 0.4s;
 }
 
-/* =========================
-   VIDEO
-========================= */
+/* VIDEO */
 
 .video-container {
   position: relative;
@@ -172,11 +162,9 @@ h2 {
   border: 1px solid #252525;
   border-radius: 10px;
   overflow: hidden;
-
   box-shadow:
     0 10px 40px rgba(255,255,255,0.04),
     0 0 25px rgba(255,255,255,0.015);
-
   animation: fadeIn 1.5s ease both;
   animation-delay: 0.8s;
 }
@@ -213,7 +201,6 @@ video {
   justify-content: center;
   align-items: center;
   padding: 0 0 0 4px;
-
   border: 1px solid rgba(255,255,255,0.65);
   border-radius: 50%;
   background: rgba(0,0,0,0.35);
@@ -234,9 +221,7 @@ video {
   transform: scale(0.94);
 }
 
-/* =========================
-   FOOTER
-========================= */
+/* FOOTER */
 
 footer {
   text-align: center;
@@ -245,11 +230,9 @@ footer {
   border-top: 1px solid var(--border);
   margin-top: 40px;
   min-height: 110px;
-
   display: flex;
   justify-content: center;
   align-items: center;
-
   animation: fadeIn 1.5s ease both;
   animation-delay: 1.2s;
 }
@@ -281,9 +264,7 @@ footer {
   }
 }
 
-/* =========================
-   FILM GRAIN
-========================= */
+/* FILM GRAIN */
 
 #filmGrain {
   position: fixed;
@@ -293,9 +274,7 @@ footer {
   pointer-events: none;
   z-index: 998;
   opacity: 0.075;
-
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.55'/%3E%3C/svg%3E");
-
   animation: grainMove .22s steps(2) infinite;
 }
 
@@ -317,9 +296,7 @@ footer {
   }
 }
 
-/* =========================
-   SNOW
-========================= */
+/* ETHEREAL SNOW */
 
 #snow {
   position: fixed;
@@ -328,11 +305,10 @@ footer {
   height: 100%;
   pointer-events: none;
   z-index: 999;
+  filter: drop-shadow(0 0 2px rgba(190,215,255,0.12));
 }
 
-/* =========================
-   MOBILE
-========================= */
+/* MOBILE */
 
 @media (max-width: 480px) {
   header {
@@ -414,13 +390,11 @@ footer {
     </video>
 
     <div class="play-overlay" id="playOverlay">
-
       <button
         class="play-button"
         id="playButton"
         aria-label="Play video"
       >▶</button>
-
     </div>
 
   </div>
@@ -433,15 +407,13 @@ footer {
   <div class="typing-text" id="typingText"></div>
 </footer>
 
-<!-- SNOW -->
+<!-- SNOW CANVAS -->
 
 <canvas id="snow"></canvas>
 
 <script>
 
-/* =========================
-   INTRO LOADING
-========================= */
+/* INTRO LOADING */
 
 const intro = document.getElementById("intro");
 
@@ -452,9 +424,7 @@ window.addEventListener("load", () => {
 });
 
 
-/* =========================
-   VIDEO WITH ORIGINAL SOUND
-========================= */
+/* VIDEO WITH ORIGINAL SOUND */
 
 const player = document.getElementById("player");
 const playButton = document.getElementById("playButton");
@@ -477,22 +447,16 @@ function updatePlayButton() {
 }
 
 playButton.addEventListener("click", () => {
-
   if (player.paused) {
-
     player.muted = false;
 
     player.play().catch(error => {
       console.log("Video playback failed:", error);
       playOverlay.classList.remove("hidden");
     });
-
   } else {
-
     player.pause();
-
   }
-
 });
 
 player.addEventListener("play", updatePlayButton);
@@ -500,9 +464,7 @@ player.addEventListener("pause", updatePlayButton);
 player.addEventListener("ended", updatePlayButton);
 
 
-/* =========================
-   ADVANCED TYPEWRITER
-========================= */
+/* ADVANCED TYPEWRITER */
 
 const typingText = document.getElementById("typingText");
 
@@ -523,51 +485,35 @@ const pauseAfterTyping = 2500;
 const pauseAfterDeleting = 650;
 
 function typeMessage() {
-
   const currentMessage = messages[messageIndex];
 
   if (!deleting) {
-
     typingText.textContent =
       currentMessage.substring(0, charIndex + 1);
 
     charIndex++;
 
     if (charIndex === currentMessage.length) {
-
       deleting = true;
-
       setTimeout(typeMessage, pauseAfterTyping);
-
     } else {
-
       setTimeout(typeMessage, typingSpeed);
-
     }
 
   } else {
-
     typingText.textContent =
       currentMessage.substring(0, charIndex - 1);
 
     charIndex--;
 
     if (charIndex === 0) {
-
       deleting = false;
-
       messageIndex = (messageIndex + 1) % messages.length;
-
       setTimeout(typeMessage, pauseAfterDeleting);
-
     } else {
-
       setTimeout(typeMessage, deletingSpeed);
-
     }
-
   }
-
 }
 
 window.addEventListener("load", () => {
@@ -575,17 +521,15 @@ window.addEventListener("load", () => {
 });
 
 
-/* =========================
-   SNOW EFFECT
-========================= */
+/* LIMBO — ETHEREAL SNOW */
 
 const canvas = document.getElementById("snow");
 const ctx = canvas.getContext("2d");
 
 let flakes = [];
+let animationId;
 
 function resize() {
-
   const dpr = Math.min(window.devicePixelRatio || 1, 2);
 
   canvas.width = window.innerWidth * dpr;
@@ -595,28 +539,32 @@ function resize() {
   canvas.style.height = window.innerHeight + "px";
 
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-
 }
 
 function createFlakes() {
+  flakes = Array.from({ length: 42 }, () => {
+    const depth = Math.random();
 
-  flakes = Array.from({length: 45}, () => ({
+    return {
+      x: Math.random() * window.innerWidth,
+      y: Math.random() * window.innerHeight,
 
-    x: Math.random() * window.innerWidth,
-    y: Math.random() * window.innerHeight,
+      r: 0.5 + depth * 1.4,
 
-    r: Math.random() * 1.8 + 0.5,
+      speed: 0.2 + depth * 0.45,
 
-    speed: Math.random() * 0.6 + 0.3,
+      drift: Math.random() * 0.3 - 0.15,
 
-    drift: Math.random() * 0.4 - 0.2
+      glow: 3 + depth * 5,
 
-  }));
+      opacity: 0.25 + depth * 0.35,
 
+      pulse: Math.random() * Math.PI * 2
+    };
+  });
 }
 
 function animate() {
-
   ctx.clearRect(
     0,
     0,
@@ -625,6 +573,12 @@ function animate() {
   );
 
   flakes.forEach(f => {
+    f.pulse += 0.012;
+
+    const brightness =
+      f.opacity * (0.85 + Math.sin(f.pulse) * 0.15);
+
+    /* SOFT BLUE-WHITE GLOW */
 
     ctx.beginPath();
 
@@ -636,35 +590,59 @@ function animate() {
       Math.PI * 2
     );
 
-    ctx.fillStyle = "rgba(255,255,255,0.65)";
+    ctx.shadowBlur = f.glow;
+    ctx.shadowColor = "rgba(195,220,255,0.8)";
+    ctx.fillStyle =
+      `rgba(215,230,255,${brightness})`;
 
     ctx.fill();
+
+    /* WHITE LIGHT CENTER */
+
+    ctx.beginPath();
+
+    ctx.arc(
+      f.x,
+      f.y,
+      f.r * 0.45,
+      0,
+      Math.PI * 2
+    );
+
+    ctx.shadowBlur = f.glow * 0.5;
+    ctx.shadowColor = "rgba(255,255,255,0.7)";
+    ctx.fillStyle =
+      `rgba(255,255,255,${brightness * 0.8})`;
+
+    ctx.fill();
+
+    ctx.shadowBlur = 0;
+
+    /* SLOW MOVEMENT */
 
     f.y += f.speed;
     f.x += f.drift;
 
-    if (f.y > window.innerHeight) {
-
+    if (f.y > window.innerHeight + 5) {
       f.y = -5;
       f.x = Math.random() * window.innerWidth;
-
     }
 
-    if (f.x > window.innerWidth) f.x = 0;
+    if (f.x > window.innerWidth + 5) {
+      f.x = -5;
+    }
 
-    if (f.x < 0) f.x = window.innerWidth;
-
+    if (f.x < -5) {
+      f.x = window.innerWidth + 5;
+    }
   });
 
-  requestAnimationFrame(animate);
-
+  animationId = requestAnimationFrame(animate);
 }
 
 window.addEventListener("resize", () => {
-
   resize();
   createFlakes();
-
 });
 
 resize();
