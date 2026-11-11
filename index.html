@@ -234,12 +234,14 @@ player.addEventListener("ended", updatePlayButton);
 
 // TYPEWRITER FOOTER EFFECT
 
+
 const typingText = document.getElementById("typingText");
 
 const messages = [
   "Sometimes he wants you to know how much he misses you.",
   "Limbo loves you deeply.",
-  "He wants to be with you forever."
+  "He wants to be with you forever.",
+  "He wants you to love him forever."
 ];
 
 let messageIndex = 0;
@@ -252,17 +254,14 @@ function typeMessage() {
     typingText.textContent += currentMessage.charAt(charIndex);
     charIndex++;
 
-    setTimeout(typeMessage, 65);
+    setTimeout(typeMessage, 100);
   } else {
-    messageIndex++;
-    charIndex = 0;
-
-    if (messageIndex < messages.length) {
-      setTimeout(() => {
-        typingText.textContent = "";
-        typeMessage();
-      }, 3000);
-    }
+    setTimeout(() => {
+      messageIndex = (messageIndex + 1) % messages.length;
+      charIndex = 0;
+      typingText.textContent = "";
+      typeMessage();
+    }, 3000);
   }
 }
 
