@@ -7,10 +7,9 @@
 
 <title>LIMBO</title>
 
-<!-- GOOGLE FONTS -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
 * {
@@ -24,13 +23,14 @@ body {
   font-family: Arial, sans-serif;
 }
 
-/* FADE IN ANIMATION */
+/* FADE IN */
 
 @keyframes fadeIn {
   from {
     opacity: 0;
     transform: translateY(15px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -40,14 +40,13 @@ body {
 header {
   padding: 22px;
   border-bottom: 1px solid #222;
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 25px;
-  font-weight: 600;
-  letter-spacing: 4px;
-  color: #E5E5E5;
+  font-family: Arial, sans-serif;
+  font-size: 22px;
+  font-weight: bold;
+  letter-spacing: 3px;
 
-  opacity: 0;
-  animation: fadeIn 1.2s ease forwards;
+  animation: fadeIn 1.2s ease both;
+  animation-delay: 0.1s;
 }
 
 main {
@@ -59,15 +58,14 @@ main {
 /* MAIN TITLE */
 
 h2 {
-  font-family: 'Manrope', sans-serif;
-  font-size: 21px;
+  font-family: Arial, sans-serif;
+  font-size: 20px;
   margin-top: 30px;
   font-weight: 500;
-  letter-spacing: 1.5px;
-  color: #C8C8D0;
+  letter-spacing: 1px;
 
-  opacity: 0;
-  animation: fadeIn 1.2s ease 0.4s forwards;
+  animation: fadeIn 1.2s ease both;
+  animation-delay: 0.4s;
 }
 
 /* VIDEO */
@@ -82,8 +80,8 @@ h2 {
   overflow: hidden;
   box-shadow: 0 10px 40px rgba(255,255,255,0.04);
 
-  opacity: 0;
-  animation: fadeIn 1.5s ease 0.8s forwards;
+  animation: fadeIn 1.5s ease both;
+  animation-delay: 0.8s;
 }
 
 video {
@@ -93,7 +91,7 @@ video {
   background: #080808;
 }
 
-/* CENTER PLAY BUTTON */
+/* PLAY BUTTON */
 
 .play-overlay {
   position: absolute;
@@ -138,7 +136,7 @@ video {
   transform: scale(0.94);
 }
 
-/* FOOTER TYPEWRITER */
+/* FOOTER */
 
 footer {
   text-align: center;
@@ -151,8 +149,8 @@ footer {
   justify-content: center;
   align-items: center;
 
-  opacity: 0;
-  animation: fadeIn 1.5s ease 1.2s forwards;
+  animation: fadeIn 1.5s ease both;
+  animation-delay: 1.2s;
 }
 
 .typing-text {
@@ -189,19 +187,6 @@ footer {
     font-size: 14px;
     letter-spacing: 0.7px;
     line-height: 2.1;
-  }
-}
-
-/* REDUCED MOTION */
-
-@media (prefers-reduced-motion: reduce) {
-  header,
-  h2,
-  .video-container,
-  footer {
-    opacity: 1;
-    animation: none;
-    transform: none;
   }
 }
 
@@ -278,8 +263,6 @@ function updatePlayButton() {
   }
 }
 
-// PLAY BUTTON
-
 playButton.addEventListener("click", () => {
   if (player.paused) {
     player.muted = false;
@@ -291,14 +274,12 @@ playButton.addEventListener("click", () => {
   }
 });
 
-// VIDEO EVENTS
-
 player.addEventListener("play", updatePlayButton);
 player.addEventListener("pause", updatePlayButton);
 player.addEventListener("ended", updatePlayButton);
 
 
-// TYPEWRITER FOOTER EFFECT
+// TYPEWRITER EFFECT
 
 const typingText = document.getElementById("typingText");
 
@@ -330,7 +311,11 @@ function typeMessage() {
   }
 }
 
-typeMessage();
+// Start typing after page content has loaded
+
+window.addEventListener("load", () => {
+  typeMessage();
+});
 
 
 // SNOW EFFECT
