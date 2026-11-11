@@ -76,25 +76,17 @@ footer {
 
 <main>
 
-<h2>Featured Video</h2>
+ <h2>Featured Video</h2>
 
-<video id="player" controls playsinline>
-  <source src="videos/video1.mp4" type="video/mp4">
-</video>
-
-<h2>Latest Videos</h2>
-
-<div class="video-card"
-onclick="playVideo('videos/video1.mp4')">
-  <p>Video 01</p>
-  <small>Watch video</small>
-</div>
-
-<div class="video-card"
-onclick="playVideo('videos/video2.mp4')">
-  <p>Video 02</p>
-  <small>Watch video</small>
-</div>
+  <video
+    id="player"
+    controls
+    playsinline
+    preload="metadata"
+  >
+    <source src="video1.mp4" type="video/mp4">
+    Your browser does not support video.
+  </video>
 
 </main>
 
