@@ -121,16 +121,18 @@ footer {
   justify-content: center;
   align-items: center;
 }
-
+  
 .typing-text {
   font-family: 'Press Start 2P', monospace;
   font-size: 11px;
   font-weight: normal;
-  color: #fff;
+  color: #C8C8D0;
   letter-spacing: 1px;
   line-height: 2.2;
   min-height: 24px;
-  text-shadow: 0 0 5px rgba(255,255,255,0.45);
+  text-shadow:
+    0 0 3px rgba(200,200,220,0.45),
+    0 0 10px rgba(160,160,180,0.2);
   max-width: 100%;
   overflow-wrap: anywhere;
 }
@@ -138,9 +140,9 @@ footer {
 .typing-text::after {
   content: "|";
   margin-left: 3px;
-  color: #fff;
+  color: #E5E5F0;
   animation: blink 0.8s infinite;
-  text-shadow: 0 0 6px #fff;
+  text-shadow: 0 0 7px rgba(220,220,255,0.7);
 }
 
 @keyframes blink {
