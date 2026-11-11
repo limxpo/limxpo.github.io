@@ -167,13 +167,15 @@ Sometimes he wants you to know how much he misses you.
 <canvas id="snow"></canvas>
 
 <script>
+
+// VIDEO WITH ORIGINAL SOUND
+
 const player = document.getElementById("player");
 const playButton = document.getElementById("playButton");
 const playOverlay = document.getElementById("playOverlay");
 
-// VIDEO
-
-player.muted = true;
+player.muted = false;
+player.volume = 1;
 player.controls = false;
 
 function updatePlayButton() {
@@ -184,11 +186,20 @@ function updatePlayButton() {
   }
 }
 
+// PLAY BUTTON
+
 playButton.addEventListener("click", () => {
   if (player.paused) {
-    player.play().catch(() => {});
+    player.muted = false;
+
+    player.play().catch(error => {
+      console.log("Video playback failed:", error);
+      playOverlay.classList.remove("hidden");
+    });
   }
 });
+
+// VIDEO EVENTS
 
 player.addEventListener("play", updatePlayButton);
 player.addEventListener("pause", updatePlayButton);
@@ -248,6 +259,7 @@ window.addEventListener("resize", () => {
 resize();
 createFlakes();
 animate();
+
 </script>
 
 </body>
