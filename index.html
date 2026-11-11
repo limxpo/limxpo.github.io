@@ -58,24 +58,51 @@ video {
   width: 100%;
   height: auto;
   background: #080808;
+}
+
+/* CENTER PLAY BUTTON */
+
+.play-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0,0,0,0.12);
+  transition: opacity .35s ease, visibility .35s ease;
+}
+
+.play-overlay.hidden {
+  opacity: 0;
+  visibility: hidden;
   pointer-events: none;
 }
 
-/* MUSIC BUTTON */
-
-.music-button {
-  position: fixed;
-  right: 20px;
-  bottom: 20px;
-  z-index: 1001;
-  width: 42px;
-  height: 42px;
-  border: 1px solid #333;
+.play-button {
+  width: 68px;
+  height: 68px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 0 0 4px;
+  border: 1px solid rgba(255,255,255,0.65);
   border-radius: 50%;
-  background: rgba(15,15,15,0.85);
-  color: #fff;
-  font-size: 19px;
+  background: rgba(0,0,0,0.35);
+  color: white;
+  font-size: 23px;
   cursor: pointer;
+  backdrop-filter: blur(5px);
+  transition: .3s ease;
+}
+
+.play-button:hover {
+  background: rgba(255,255,255,0.15);
+  border-color: #fff;
+  transform: scale(1.08);
+}
+
+.play-button:active {
+  transform: scale(0.94);
 }
 
 footer {
@@ -107,15 +134,13 @@ footer {
 
 <h2>My feelings inside</h2>
 
-<div class="video-container">
+<div class="video-container" id="videoContainer">
 
   <video
     id="player"
-    autoplay
     muted
     loop
     playsinline
-    webkit-playsinline
     preload="auto"
   >
     <source
@@ -123,6 +148,14 @@ footer {
       type="video/mp4"
     >
   </video>
+
+  <div class="play-overlay" id="playOverlay">
+    <button
+      class="play-button"
+      id="playButton"
+      aria-label="Play video"
+    >▶</button>
+  </div>
 
 </div>
 
@@ -132,84 +165,35 @@ footer {
 Sometimes he wants you to know how much he misses you.
 </footer>
 
-<audio
-  id="backgroundMusic"
-  src="snaptik.vn_7616757629498494241.mp3"
-  loop
-  preload="auto"
-></audio>
-
-<button
-  class="music-button"
-  id="musicButton"
-  aria-label="Bật hoặc tắt nhạc"
->♪</button>
-
 <canvas id="snow"></canvas>
 
 <script>
 const player = document.getElementById("player");
-const music = document.getElementById("backgroundMusic");
-const musicButton = document.getElementById("musicButton");
+const playButton = document.getElementById("playButton");
+const playOverlay = document.getElementById("playOverlay");
 
-// VIDEO: ALWAYS MUTED
+// VIDEO
 
 player.muted = true;
-player.defaultMuted = true;
 player.controls = false;
 
-function playVideo() {
-  player.play().catch(() => {});
-}
-
-playVideo();
-
-// MUSIC
-
-music.volume = 0.5;
-
-function startMusic() {
-  if (!music.paused) return;
-
-  music.play().then(() => {
-    musicButton.textContent = "♫";
-  }).catch(() => {
-    musicButton.textContent = "♪";
-  });
-}
-
-// Try autoplay music
-startMusic();
-
-// Start music after first user interaction
-function enableMusic() {
-  startMusic();
-
-  if (!music.paused) {
-    document.removeEventListener("pointerdown", enableMusic);
-  }
-}
-
-document.addEventListener("pointerdown", enableMusic);
-
-// Music toggle
-musicButton.addEventListener("click", (event) => {
-  event.stopPropagation();
-
-  if (music.paused) {
-    startMusic();
+function updatePlayButton() {
+  if (player.paused || player.ended) {
+    playOverlay.classList.remove("hidden");
   } else {
-    music.pause();
-    musicButton.textContent = "♪";
+    playOverlay.classList.add("hidden");
+  }
+}
+
+playButton.addEventListener("click", () => {
+  if (player.paused) {
+    player.play().catch(() => {});
   }
 });
 
-// Keep video silent
-player.addEventListener("volumechange", () => {
-  if (!player.muted) {
-    player.muted = true;
-  }
-});
+player.addEventListener("play", updatePlayButton);
+player.addEventListener("pause", updatePlayButton);
+player.addEventListener("ended", updatePlayButton);
 
 // SNOW EFFECT
 
