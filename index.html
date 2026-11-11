@@ -7,8 +7,10 @@
 
 <title>LIMBO</title>
 
-<!-- MANROPE FONT -->
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<!-- GOOGLE FONTS -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
 * {
@@ -22,13 +24,19 @@ body {
   font-family: Arial, sans-serif;
 }
 
+/* HEADER */
+
 header {
   padding: 22px;
   border-bottom: 1px solid #222;
-  font-size: 22px;
-  font-weight: bold;
-  letter-spacing: 3px;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 25px;
+  font-weight: 600;
+  letter-spacing: 4px;
+  color: #E5E5E5;
 }
+
+/* MAIN */
 
 main {
   max-width: 900px;
@@ -36,11 +44,15 @@ main {
   padding: 22px;
 }
 
+/* MAIN TITLE */
+
 h2 {
-  font-size: 20px;
+  font-family: 'Manrope', sans-serif;
+  font-size: 21px;
   margin-top: 30px;
   font-weight: 500;
-  letter-spacing: 1px;
+  letter-spacing: 1.5px;
+  color: #C8C8D0;
 }
 
 /* VIDEO */
@@ -282,7 +294,7 @@ function typeMessage() {
       charIndex = 0;
       typingText.textContent = "";
       typeMessage();
-    }, isLastMessage ? 5000 : 5000);
+    }, 5000);
   }
 }
 
