@@ -105,12 +105,38 @@ video {
   transform: scale(0.94);
 }
 
+/* FOOTER TYPEWRITER */
+
 footer {
   text-align: center;
-  color: #666;
-  padding: 30px;
+  color: #888;
+  padding: 30px 15px;
   border-top: 1px solid #222;
   margin-top: 40px;
+  min-height: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.typing-text {
+  font-size: 13px;
+  letter-spacing: 1px;
+  line-height: 1.8;
+  min-height: 24px;
+}
+
+.typing-text::after {
+  content: "|";
+  margin-left: 3px;
+  color: #fff;
+  animation: blink 0.8s infinite;
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
 }
 
 /* SNOW */
@@ -161,7 +187,7 @@ footer {
 </main>
 
 <footer>
-Sometimes he wants you to know how much he misses you.
+  <div class="typing-text" id="typingText"></div>
 </footer>
 
 <canvas id="snow"></canvas>
@@ -204,6 +230,44 @@ playButton.addEventListener("click", () => {
 player.addEventListener("play", updatePlayButton);
 player.addEventListener("pause", updatePlayButton);
 player.addEventListener("ended", updatePlayButton);
+
+
+// TYPEWRITER FOOTER EFFECT
+
+const typingText = document.getElementById("typingText");
+
+const messages = [
+  "Sometimes he wants you to know how much he misses you.",
+  "Limbo loves you deeply.",
+  "He wants to be with you forever."
+];
+
+let messageIndex = 0;
+let charIndex = 0;
+
+function typeMessage() {
+  const currentMessage = messages[messageIndex];
+
+  if (charIndex < currentMessage.length) {
+    typingText.textContent += currentMessage.charAt(charIndex);
+    charIndex++;
+
+    setTimeout(typeMessage, 65);
+  } else {
+    messageIndex++;
+    charIndex = 0;
+
+    if (messageIndex < messages.length) {
+      setTimeout(() => {
+        typingText.textContent = "";
+        typeMessage();
+      }, 3000);
+    }
+  }
+}
+
+typeMessage();
+
 
 // SNOW EFFECT
 
