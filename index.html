@@ -24,7 +24,18 @@ body {
   font-family: Arial, sans-serif;
 }
 
-/* HEADER */
+/* FADE IN ANIMATION */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 
 header {
   padding: 22px;
@@ -34,9 +45,10 @@ header {
   font-weight: 600;
   letter-spacing: 4px;
   color: #E5E5E5;
-}
 
-/* MAIN */
+  opacity: 0;
+  animation: fadeIn 1.2s ease forwards;
+}
 
 main {
   max-width: 900px;
@@ -53,6 +65,9 @@ h2 {
   font-weight: 500;
   letter-spacing: 1.5px;
   color: #C8C8D0;
+
+  opacity: 0;
+  animation: fadeIn 1.2s ease 0.4s forwards;
 }
 
 /* VIDEO */
@@ -66,6 +81,9 @@ h2 {
   border-radius: 10px;
   overflow: hidden;
   box-shadow: 0 10px 40px rgba(255,255,255,0.04);
+
+  opacity: 0;
+  animation: fadeIn 1.5s ease 0.8s forwards;
 }
 
 video {
@@ -132,6 +150,9 @@ footer {
   display: flex;
   justify-content: center;
   align-items: center;
+
+  opacity: 0;
+  animation: fadeIn 1.5s ease 1.2s forwards;
 }
 
 .typing-text {
@@ -168,6 +189,19 @@ footer {
     font-size: 14px;
     letter-spacing: 0.7px;
     line-height: 2.1;
+  }
+}
+
+/* REDUCED MOTION */
+
+@media (prefers-reduced-motion: reduce) {
+  header,
+  h2,
+  .video-container,
+  footer {
+    opacity: 1;
+    animation: none;
+    transform: none;
   }
 }
 
@@ -287,8 +321,6 @@ function typeMessage() {
 
     setTimeout(typeMessage, 125);
   } else {
-    const isLastMessage = messageIndex === messages.length - 1;
-
     setTimeout(() => {
       messageIndex = (messageIndex + 1) % messages.length;
       charIndex = 0;
