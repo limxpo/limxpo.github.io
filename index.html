@@ -9,7 +9,7 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600&family=Cormorant+Garamond:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
 
 <style>
 * {
@@ -19,7 +19,8 @@
 :root {
   --text: #dedee3;
   --muted: #777984;
-  --border: rgba(255,255,255,0.08);
+  --border: rgba(255,255,255,0.09);
+  --cold: #c6d2e4;
 }
 
 html {
@@ -31,7 +32,7 @@ body {
   margin: 0;
   min-height: 100vh;
   background:
-    radial-gradient(ellipse at 50% 40%, #111218 0%, #08090c 50%, #030304 100%);
+    radial-gradient(ellipse at 50% 38%, #111218 0%, #08090c 45%, #030304 100%);
   color: var(--text);
   font-family: 'Manrope', sans-serif;
   overflow-x: hidden;
@@ -67,6 +68,7 @@ body {
   letter-spacing: 11px;
   padding-left: 11px;
   color: #e5e5e8;
+  text-shadow: 0 0 25px rgba(210,220,255,0.12);
 }
 
 .intro-line {
@@ -86,8 +88,14 @@ body {
 }
 
 @keyframes introReveal {
-  from { opacity: 0; transform: translateY(12px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes lineReveal {
@@ -108,7 +116,9 @@ body {
   pointer-events: none;
   z-index: 998;
   opacity: 0.065;
+
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.55'/%3E%3C/svg%3E");
+
   animation: grainMove .22s steps(2) infinite;
 }
 
@@ -127,69 +137,128 @@ body {
   inset: 0;
   z-index: 997;
   pointer-events: none;
-  background: radial-gradient(
-    ellipse at center,
-    transparent 35%,
-    rgba(0,0,0,0.25) 75%,
-    rgba(0,0,0,0.72) 130%
-  );
+  background:
+    radial-gradient(
+      ellipse at center,
+      transparent 35%,
+      rgba(0,0,0,0.25) 75%,
+      rgba(0,0,0,0.72) 130%
+    );
 }
 
 /* HEADER */
 
 header {
-  max-width: 1100px;
+  width: 100%;
+  max-width: 1200px;
   margin: auto;
-  padding: 30px 35px;
+  padding: 28px 35px;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   border-bottom: 1px solid var(--border);
+  animation: fadeIn 1.5s ease both;
 }
 
 .logo {
-  font-size: 18px;
-  font-weight: 600;
-  letter-spacing: 9px;
-  padding-left: 9px;
+  font-size: 19px;
+  font-weight: 700;
+  letter-spacing: 7px;
   color: #e3e3e8;
 }
 
-/* MAIN */
+.header-note {
+  font-size: 9px;
+  letter-spacing: 3px;
+  color: #646672;
+}
+
+/* MAIN LAYOUT */
 
 main {
-  max-width: 1000px;
+  max-width: 1100px;
   margin: auto;
-  padding: 95px 35px 40px;
+  padding: 90px 35px 60px;
 }
 
 .hero {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: 0.85fr 1.35fr;
+  gap: 65px;
   align-items: center;
-  gap: 35px;
 }
 
-/* TITLE */
+/* LEFT TEXT */
 
-.hero-title {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: clamp(36px, 5vw, 54px);
-  font-weight: 400;
-  font-style: italic;
-  color: #c9cbd3;
-  text-align: center;
-  letter-spacing: 1px;
+.hero-copy {
   animation: fadeIn 1.5s ease both;
+  animation-delay: .3s;
+}
+
+.eyebrow {
+  font-size: 9px;
+  letter-spacing: 4px;
+  color: #707481;
+  margin-bottom: 25px;
+}
+
+h1 {
+  margin: 0;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(43px, 6vw, 70px);
+  line-height: 1.05;
+  font-weight: 400;
+  letter-spacing: -1px;
+  color: #dedee3;
+}
+
+h1 span {
+  display: block;
+  color: #777c89;
+  font-style: italic;
+  margin-top: 7px;
+}
+
+.hero-description {
+  margin-top: 30px;
+  max-width: 270px;
+  font-size: 11px;
+  line-height: 2.2;
+  letter-spacing: .5px;
+  color: #737580;
+}
+
+.hero-index {
+  margin-top: 55px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  color: #656874;
+  font-size: 9px;
+  letter-spacing: 3px;
+}
+
+.hero-index::before {
+  content: "";
+  width: 30px;
+  height: 1px;
+  background: #555a68;
 }
 
 /* VIDEO */
 
 .video-section {
-  width: 100%;
-  max-width: 760px;
   animation: fadeIn 1.7s ease both;
-  animation-delay: .3s;
+  animation-delay: .6s;
+}
+
+.video-label {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 13px;
+  color: #666a76;
+  font-size: 8px;
+  letter-spacing: 3px;
 }
 
 .video-container {
@@ -198,6 +267,7 @@ main {
   background: #08090c;
   border: 1px solid rgba(220,225,240,0.11);
   overflow: hidden;
+
   box-shadow:
     0 25px 70px rgba(0,0,0,0.65),
     0 0 30px rgba(180,200,255,0.025);
@@ -229,17 +299,18 @@ video {
 }
 
 .play-button {
-  width: 62px;
-  height: 62px;
+  width: 64px;
+  height: 64px;
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 0 0 0 4px;
+
   border: 1px solid rgba(220,230,255,0.55);
   border-radius: 50%;
   background: rgba(0,0,0,0.4);
   color: #e5e8ef;
-  font-size: 19px;
+  font-size: 20px;
   cursor: pointer;
   backdrop-filter: blur(8px);
   transition: .35s ease;
@@ -247,6 +318,7 @@ video {
 
 .play-button:hover {
   background: rgba(200,215,245,0.12);
+  border-color: #dce5f5;
   transform: scale(1.06);
 }
 
@@ -254,26 +326,54 @@ video {
   transform: scale(.94);
 }
 
-/* THOUGHTS */
+/* VIDEO CAPTION */
+
+.video-caption {
+  margin-top: 15px;
+  display: flex;
+  justify-content: space-between;
+  color: #656975;
+  font-size: 8px;
+  letter-spacing: 2px;
+}
+
+/* THOUGHTS SECTION */
 
 .thoughts {
-  max-width: 760px;
-  margin: 65px auto 0;
-  padding: 30px 20px;
+  max-width: 1100px;
+  margin: 70px auto 0;
+  padding: 35px;
   border-top: 1px solid var(--border);
-  text-align: center;
+  border-bottom: 1px solid var(--border);
+
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  gap: 35px;
+  align-items: start;
+
   animation: fadeIn 1.5s ease both;
-  animation-delay: .8s;
+  animation-delay: 1s;
+}
+
+.thoughts-label {
+  color: #676b77;
+  font-size: 9px;
+  letter-spacing: 3px;
+  line-height: 2;
+}
+
+.thoughts-content {
+  min-width: 0;
 }
 
 .typing-text {
   font-family: 'Cormorant Garamond', serif;
-  font-size: clamp(21px, 3vw, 29px);
+  font-size: clamp(22px, 3vw, 31px);
   font-style: italic;
   font-weight: 400;
-  color: #bfc2cc;
+  color: #c6c8d0;
   line-height: 1.6;
-  min-height: 46px;
+  min-height: 52px;
   text-shadow: 0 0 18px rgba(180,195,230,0.08);
   overflow-wrap: anywhere;
 }
@@ -289,17 +389,26 @@ video {
   50% { opacity: 0; }
 }
 
-/* FOOTER */
-
-footer {
-  max-width: 1000px;
-  margin: 35px auto 0;
-  padding: 25px 35px;
-  border-top: 1px solid var(--border);
-  text-align: center;
-  color: #555862;
+.thoughts-signature {
+  margin-top: 18px;
+  color: #626673;
   font-size: 8px;
   letter-spacing: 4px;
+}
+
+/* BOTTOM */
+
+.bottom-note {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 35px;
+  display: flex;
+  justify-content: space-between;
+  color: #4e515b;
+  font-size: 8px;
+  letter-spacing: 3px;
+  animation: fadeIn 1.5s ease both;
+  animation-delay: 1.2s;
 }
 
 /* SNOW */
@@ -330,43 +439,77 @@ footer {
 
 @media (max-width: 700px) {
   header {
-    padding: 25px 20px;
+    padding: 23px 22px;
+  }
+
+  .logo {
+    font-size: 17px;
+  }
+
+  .header-note {
+    font-size: 7px;
+    letter-spacing: 2px;
   }
 
   main {
-    padding: 75px 20px 30px;
+    padding: 65px 22px 35px;
   }
 
   .hero {
-    gap: 28px;
+    grid-template-columns: 1fr;
+    gap: 38px;
   }
 
-  .hero-title {
-    font-size: 39px;
+  h1 {
+    font-size: 52px;
   }
 
-  .video-section {
-    width: 100%;
+  .hero-description {
+    margin-top: 20px;
+  }
+
+  .hero-index {
+    margin-top: 30px;
+  }
+
+  .video-label {
+    font-size: 7px;
   }
 
   .play-button {
-    width: 56px;
-    height: 56px;
+    width: 58px;
+    height: 58px;
   }
 
   .thoughts {
     margin-top: 45px;
-    padding: 25px 12px;
+    padding: 27px 22px;
+    grid-template-columns: 1fr;
+    gap: 18px;
   }
 
   .typing-text {
-    font-size: 24px;
+    font-size: 25px;
   }
 
-  footer {
-    margin-top: 25px;
-    padding: 25px 15px;
+  .bottom-note {
+    padding: 25px 22px;
     font-size: 7px;
+    letter-spacing: 2px;
+  }
+}
+
+@media (max-width: 360px) {
+  h1 {
+    font-size: 43px;
+  }
+
+  .header-note {
+    font-size: 6px;
+  }
+
+  .bottom-note {
+    letter-spacing: 1px;
   }
 }
 
@@ -384,6 +527,8 @@ footer {
 
 <body>
 
+<!-- INTRO -->
+
 <div id="intro">
   <div class="intro-content">
     <div class="intro-title">LIMBO</div>
@@ -395,21 +540,56 @@ footer {
 <div id="filmGrain"></div>
 <div class="vignette"></div>
 
+<!-- HEADER -->
+
 <header>
   <div class="logo">LIMBO</div>
+  <div class="header-note">A PLACE BETWEEN FEELINGS</div>
 </header>
 
+<!-- MAIN -->
+
 <main>
+
   <section class="hero">
 
-    <div class="hero-title">
-      Somewhere between.
+    <div class="hero-copy">
+
+      <h1>
+        Somewhere
+        <span>between</span>
+        feeling and
+        <span>forgetting.</span>
+      </h1>
+
+      <p class="hero-description">
+        Some feelings never really leave.
+        They just become quieter with time.
+      </p>
+
+      <div class="hero-index">
+        A MOMENT THAT STAYED
+      </div>
+
     </div>
 
+    <!-- VIDEO -->
+
     <div class="video-section">
+
+      <div class="video-label">
+        <span>MEMORY / 001</span>
+        <span>PLAYBACK</span>
+      </div>
+
       <div class="video-container">
 
-        <video id="player" loop playsinline preload="auto">
+        <video
+          id="player"
+          loop
+          playsinline
+          preload="auto"
+        >
           <source
             src="snaptik.vn_7616757629498494241.mp4"
             type="video/mp4"
@@ -417,26 +597,57 @@ footer {
         </video>
 
         <div class="play-overlay" id="playOverlay">
+
           <button
             class="play-button"
             id="playButton"
             aria-label="Play video"
           >▶</button>
+
         </div>
 
       </div>
+
+      <div class="video-caption">
+        <span>AN UNFINISHED MEMORY</span>
+        <span>01 / 01</span>
+      </div>
+
     </div>
 
   </section>
+
 </main>
 
+<!-- THOUGHTS -->
+
 <section class="thoughts">
-  <div class="typing-text" id="typingText"></div>
+
+  <div class="thoughts-label">
+    THOUGHTS<br>
+    THAT REMAIN
+  </div>
+
+  <div class="thoughts-content">
+
+    <div class="typing-text" id="typingText"></div>
+
+    <div class="thoughts-signature">
+      — LIMBO
+    </div>
+
+  </div>
+
 </section>
 
-<footer>
-  LIMBO WAS HERE
-</footer>
+<!-- BOTTOM -->
+
+<div class="bottom-note">
+  <span>NOT EVERYTHING NEEDS TO BE SAID.</span>
+  <span>LIMBO WAS HERE</span>
+</div>
+
+<!-- SNOW -->
 
 <canvas id="snow"></canvas>
 
@@ -544,6 +755,129 @@ function typeMessage() {
 }
 
 window.addEventListener("load", () => {
+  setTimeout(typeMessage, 2800);
+});
+
+
+/* ETHEREAL SNOW */
+
+const canvas = document.getElementById("snow");
+const ctx = canvas.getContext("2d");
+
+let flakes = [];
+
+function resize() {
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+  canvas.width = window.innerWidth * dpr;
+  canvas.height = window.innerHeight * dpr;
+
+  canvas.style.width = window.innerWidth + "px";
+  canvas.style.height = window.innerHeight + "px";
+
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+}
+
+function createFlakes() {
+  flakes = Array.from({ length: 42 }, () => {
+    const depth = Math.random();
+
+    return {
+      x: Math.random() * window.innerWidth,
+      y: Math.random() * window.innerHeight,
+      r: 0.5 + depth * 1.4,
+      speed: 0.2 + depth * 0.45,
+      drift: Math.random() * 0.3 - 0.15,
+      glow: 3 + depth * 5,
+      opacity: 0.25 + depth * 0.35,
+      pulse: Math.random() * Math.PI * 2
+    };
+  });
+}
+
+function animate() {
+  ctx.clearRect(
+    0,
+    0,
+    window.innerWidth,
+    window.innerHeight
+  );
+
+  flakes.forEach(f => {
+    f.pulse += 0.012;
+
+    const brightness =
+      f.opacity * (0.85 + Math.sin(f.pulse) * 0.15);
+
+    ctx.beginPath();
+
+    ctx.arc(
+      f.x,
+      f.y,
+      f.r,
+      0,
+      Math.PI * 2
+    );
+
+    ctx.shadowBlur = f.glow;
+    ctx.shadowColor = "rgba(195,220,255,0.8)";
+    ctx.fillStyle =
+      `rgba(215,230,255,${brightness})`;
+
+    ctx.fill();
+
+    ctx.beginPath();
+
+    ctx.arc(
+      f.x,
+      f.y,
+      f.r * 0.45,
+      0,
+      Math.PI * 2
+    );
+
+    ctx.shadowBlur = f.glow * 0.5;
+    ctx.shadowColor = "rgba(255,255,255,0.7)";
+    ctx.fillStyle =
+      `rgba(255,255,255,${brightness * 0.8})`;
+
+    ctx.fill();
+
+    ctx.shadowBlur = 0;
+
+    f.y += f.speed;
+    f.x += f.drift;
+
+    if (f.y > window.innerHeight + 5) {
+      f.y = -5;
+      f.x = Math.random() * window.innerWidth;
+    }
+
+    if (f.x > window.innerWidth + 5) {
+      f.x = -5;
+    }
+
+    if (f.x < -5) {
+      f.x = window.innerWidth + 5;
+    }
+  });
+
+  requestAnimationFrame(animate);
+}
+
+window.addEventListener("resize", () => {
+  resize();
+  createFlakes();
+});
+
+resize();
+createFlakes();
+animate();
+
+</script>
+
+</body>
+</html>load", () => {
   setTimeout(typeMessage, 2800);
 });
 
