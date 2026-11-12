@@ -9,7 +9,7 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
 
 <style>
 * {
@@ -17,34 +17,38 @@
 }
 
 :root {
-  --text: #eeeeF2;
-  --muted: #aaaab5;
-  --border: #222228;
+  --text: #dedee3;
+  --muted: #777984;
+  --border: rgba(255,255,255,0.09);
+  --cold: #c6d2e4;
 }
 
 html {
-  background: #000;
+  background: #050506;
+  scroll-behavior: smooth;
 }
 
 body {
   margin: 0;
-  background: #000;
+  min-height: 100vh;
+  background:
+    radial-gradient(ellipse at 50% 38%, #111218 0%, #08090c 45%, #030304 100%);
   color: var(--text);
-  font-family: Arial, sans-serif;
+  font-family: 'Manrope', sans-serif;
   overflow-x: hidden;
 }
 
-/* INTRO LOADING */
+/* INTRO */
 
 #intro {
   position: fixed;
   inset: 0;
   z-index: 10000;
-  background: #000;
+  background: #030304;
   display: flex;
   justify-content: center;
   align-items: center;
-  transition: opacity 1.3s ease, visibility 1.3s ease;
+  transition: opacity 1.5s ease, visibility 1.5s ease;
 }
 
 #intro.hide {
@@ -55,33 +59,32 @@ body {
 
 .intro-content {
   text-align: center;
-  animation: introReveal 1.8s ease both;
+  animation: introReveal 2s ease both;
 }
 
 .intro-title {
-  font-family: Arial, sans-serif;
-  font-size: 27px;
-  font-weight: bold;
-  letter-spacing: 9px;
-  color: #eee;
-  text-shadow: 0 0 20px rgba(255,255,255,0.15);
+  font-size: 25px;
+  font-weight: 500;
+  letter-spacing: 11px;
+  padding-left: 11px;
+  color: #e5e5e8;
+  text-shadow: 0 0 25px rgba(210,220,255,0.12);
 }
 
 .intro-line {
   width: 0;
   height: 1px;
-  background: #aaa;
-  margin: 20px auto;
-  animation: lineReveal 1.8s ease forwards;
+  background: #8c909d;
+  margin: 22px auto;
+  animation: lineReveal 2s ease forwards;
 }
 
 .intro-subtitle {
-  font-family: 'Manrope', sans-serif;
-  font-size: 10px;
+  font-size: 9px;
   letter-spacing: 4px;
-  color: #777;
+  color: #676a76;
   opacity: 0;
-  animation: subtitleReveal 1.5s ease 0.7s forwards;
+  animation: subtitleReveal 1.5s ease 0.8s forwards;
 }
 
 @keyframes introReveal {
@@ -96,172 +99,11 @@ body {
 }
 
 @keyframes lineReveal {
-  to {
-    width: 85px;
-  }
+  to { width: 90px; }
 }
 
 @keyframes subtitleReveal {
-  to {
-    opacity: 1;
-  }
-}
-
-/* FADE IN */
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(15px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-header {
-  padding: 22px;
-  border-bottom: 1px solid var(--border);
-  font-family: Arial, sans-serif;
-  font-size: 22px;
-  font-weight: bold;
-  letter-spacing: 3px;
-  text-shadow: 0 0 15px rgba(255,255,255,0.12);
-  animation: fadeIn 1.2s ease both;
-  animation-delay: 0.1s;
-}
-
-main {
-  max-width: 900px;
-  margin: auto;
-  padding: 22px;
-}
-
-/* MAIN TITLE */
-
-h2 {
-  font-family: Arial, sans-serif;
-  font-size: 20px;
-  margin-top: 30px;
-  font-weight: 500;
-  letter-spacing: 1px;
-  color: #e5e5e9;
-  text-shadow: 0 0 12px rgba(255,255,255,0.12);
-  animation: fadeIn 1.2s ease both;
-  animation-delay: 0.4s;
-}
-
-/* VIDEO */
-
-.video-container {
-  position: relative;
-  width: 100%;
-  margin-top: 16px;
-  background: #080808;
-  border: 1px solid #252525;
-  border-radius: 10px;
-  overflow: hidden;
-  box-shadow:
-    0 10px 40px rgba(255,255,255,0.04),
-    0 0 25px rgba(255,255,255,0.015);
-  animation: fadeIn 1.5s ease both;
-  animation-delay: 0.8s;
-}
-
-video {
-  display: block;
-  width: 100%;
-  height: auto;
-  background: #080808;
-}
-
-/* PLAY BUTTON */
-
-.play-overlay {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: rgba(0,0,0,0.12);
-  transition: opacity .35s ease, visibility .35s ease;
-}
-
-.play-overlay.hidden {
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-}
-
-.play-button {
-  width: 68px;
-  height: 68px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 0 0 0 4px;
-  border: 1px solid rgba(255,255,255,0.65);
-  border-radius: 50%;
-  background: rgba(0,0,0,0.35);
-  color: white;
-  font-size: 23px;
-  cursor: pointer;
-  backdrop-filter: blur(5px);
-  transition: .3s ease;
-}
-
-.play-button:hover {
-  background: rgba(255,255,255,0.15);
-  border-color: #fff;
-  transform: scale(1.08);
-}
-
-.play-button:active {
-  transform: scale(0.94);
-}
-
-/* FOOTER */
-
-footer {
-  text-align: center;
-  color: #fff;
-  padding: 30px 15px;
-  border-top: 1px solid var(--border);
-  margin-top: 40px;
-  min-height: 110px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  animation: fadeIn 1.5s ease both;
-  animation-delay: 1.2s;
-}
-
-.typing-text {
-  font-family: 'Manrope', sans-serif;
-  font-size: 16px;
-  font-weight: 400;
-  color: #C8C8D0;
-  letter-spacing: 1.2px;
-  line-height: 2;
-  min-height: 24px;
-  text-shadow: 0 0 8px rgba(200,200,220,0.2);
-  max-width: 100%;
-  overflow-wrap: anywhere;
-}
-
-.typing-text::after {
-  content: "|";
-  margin-left: 3px;
-  color: #E5E5F0;
-  animation: blink 0.8s infinite;
-  text-shadow: 0 0 7px rgba(220,220,255,0.7);
-}
-
-@keyframes blink {
-  50% {
-    opacity: 0;
-  }
+  to { opacity: 1; }
 }
 
 /* FILM GRAIN */
@@ -273,30 +115,303 @@ footer {
   height: 200%;
   pointer-events: none;
   z-index: 998;
-  opacity: 0.075;
+  opacity: 0.065;
+
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.55'/%3E%3C/svg%3E");
+
   animation: grainMove .22s steps(2) infinite;
 }
 
 @keyframes grainMove {
-  0% {
-    transform: translate(0,0);
-  }
-  25% {
-    transform: translate(-2%,2%);
-  }
-  50% {
-    transform: translate(2%,-1%);
-  }
-  75% {
-    transform: translate(-1%,-2%);
-  }
-  100% {
-    transform: translate(2%,1%);
-  }
+  0% { transform: translate(0,0); }
+  25% { transform: translate(-2%,2%); }
+  50% { transform: translate(2%,-1%); }
+  75% { transform: translate(-1%,-2%); }
+  100% { transform: translate(2%,1%); }
 }
 
-/* ETHEREAL SNOW */
+/* VIGNETTE */
+
+.vignette {
+  position: fixed;
+  inset: 0;
+  z-index: 997;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      ellipse at center,
+      transparent 35%,
+      rgba(0,0,0,0.25) 75%,
+      rgba(0,0,0,0.72) 130%
+    );
+}
+
+/* HEADER */
+
+header {
+  width: 100%;
+  max-width: 1200px;
+  margin: auto;
+  padding: 28px 35px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border);
+  animation: fadeIn 1.5s ease both;
+}
+
+.logo {
+  font-size: 19px;
+  font-weight: 700;
+  letter-spacing: 7px;
+  color: #e3e3e8;
+}
+
+.header-note {
+  font-size: 9px;
+  letter-spacing: 3px;
+  color: #646672;
+}
+
+/* MAIN LAYOUT */
+
+main {
+  max-width: 1100px;
+  margin: auto;
+  padding: 90px 35px 60px;
+}
+
+.hero {
+  display: grid;
+  grid-template-columns: 0.85fr 1.35fr;
+  gap: 65px;
+  align-items: center;
+}
+
+/* LEFT TEXT */
+
+.hero-copy {
+  animation: fadeIn 1.5s ease both;
+  animation-delay: .3s;
+}
+
+.eyebrow {
+  font-size: 9px;
+  letter-spacing: 4px;
+  color: #707481;
+  margin-bottom: 25px;
+}
+
+h1 {
+  margin: 0;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(43px, 6vw, 70px);
+  line-height: 1.05;
+  font-weight: 400;
+  letter-spacing: -1px;
+  color: #dedee3;
+}
+
+h1 span {
+  display: block;
+  color: #777c89;
+  font-style: italic;
+  margin-top: 7px;
+}
+
+.hero-description {
+  margin-top: 30px;
+  max-width: 270px;
+  font-size: 11px;
+  line-height: 2.2;
+  letter-spacing: .5px;
+  color: #737580;
+}
+
+.hero-index {
+  margin-top: 55px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  color: #656874;
+  font-size: 9px;
+  letter-spacing: 3px;
+}
+
+.hero-index::before {
+  content: "";
+  width: 30px;
+  height: 1px;
+  background: #555a68;
+}
+
+/* VIDEO */
+
+.video-section {
+  animation: fadeIn 1.7s ease both;
+  animation-delay: .6s;
+}
+
+.video-label {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 13px;
+  color: #666a76;
+  font-size: 8px;
+  letter-spacing: 3px;
+}
+
+.video-container {
+  position: relative;
+  width: 100%;
+  background: #08090c;
+  border: 1px solid rgba(220,225,240,0.11);
+  overflow: hidden;
+
+  box-shadow:
+    0 25px 70px rgba(0,0,0,0.65),
+    0 0 30px rgba(180,200,255,0.025);
+}
+
+video {
+  display: block;
+  width: 100%;
+  height: auto;
+  background: #08090c;
+}
+
+/* PLAY BUTTON */
+
+.play-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0,0,0,0.15);
+  transition: opacity .4s ease, visibility .4s ease;
+}
+
+.play-overlay.hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.play-button {
+  width: 64px;
+  height: 64px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 0 0 4px;
+
+  border: 1px solid rgba(220,230,255,0.55);
+  border-radius: 50%;
+  background: rgba(0,0,0,0.4);
+  color: #e5e8ef;
+  font-size: 20px;
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+  transition: .35s ease;
+}
+
+.play-button:hover {
+  background: rgba(200,215,245,0.12);
+  border-color: #dce5f5;
+  transform: scale(1.06);
+}
+
+.play-button:active {
+  transform: scale(.94);
+}
+
+/* VIDEO CAPTION */
+
+.video-caption {
+  margin-top: 15px;
+  display: flex;
+  justify-content: space-between;
+  color: #656975;
+  font-size: 8px;
+  letter-spacing: 2px;
+}
+
+/* THOUGHTS SECTION */
+
+.thoughts {
+  max-width: 1100px;
+  margin: 70px auto 0;
+  padding: 35px;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  gap: 35px;
+  align-items: start;
+
+  animation: fadeIn 1.5s ease both;
+  animation-delay: 1s;
+}
+
+.thoughts-label {
+  color: #676b77;
+  font-size: 9px;
+  letter-spacing: 3px;
+  line-height: 2;
+}
+
+.thoughts-content {
+  min-width: 0;
+}
+
+.typing-text {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(22px, 3vw, 31px);
+  font-style: italic;
+  font-weight: 400;
+  color: #c6c8d0;
+  line-height: 1.6;
+  min-height: 52px;
+  text-shadow: 0 0 18px rgba(180,195,230,0.08);
+  overflow-wrap: anywhere;
+}
+
+.typing-text::after {
+  content: "|";
+  margin-left: 4px;
+  color: #9ba8bd;
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+  50% { opacity: 0; }
+}
+
+.thoughts-signature {
+  margin-top: 18px;
+  color: #626673;
+  font-size: 8px;
+  letter-spacing: 4px;
+}
+
+/* BOTTOM */
+
+.bottom-note {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 35px;
+  display: flex;
+  justify-content: space-between;
+  color: #4e515b;
+  font-size: 8px;
+  letter-spacing: 3px;
+  animation: fadeIn 1.5s ease both;
+  animation-delay: 1.2s;
+}
+
+/* SNOW */
 
 #snow {
   position: fixed;
@@ -305,37 +420,98 @@ footer {
   height: 100%;
   pointer-events: none;
   z-index: 999;
-  filter: drop-shadow(0 0 2px rgba(190,215,255,0.12));
+}
+
+/* ANIMATION */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* MOBILE */
 
-@media (max-width: 480px) {
+@media (max-width: 700px) {
   header {
-    font-size: 20px;
+    padding: 23px 22px;
   }
 
-  h2 {
-    font-size: 18px;
+  .logo {
+    font-size: 17px;
   }
 
-  .typing-text {
-    font-size: 14px;
-    letter-spacing: 0.7px;
-    line-height: 2.1;
+  .header-note {
+    font-size: 7px;
+    letter-spacing: 2px;
+  }
+
+  main {
+    padding: 65px 22px 35px;
+  }
+
+  .hero {
+    grid-template-columns: 1fr;
+    gap: 38px;
+  }
+
+  h1 {
+    font-size: 52px;
+  }
+
+  .hero-description {
+    margin-top: 20px;
+  }
+
+  .hero-index {
+    margin-top: 30px;
+  }
+
+  .video-label {
+    font-size: 7px;
   }
 
   .play-button {
-    width: 60px;
-    height: 60px;
+    width: 58px;
+    height: 58px;
   }
 
-  .intro-title {
-    font-size: 23px;
+  .thoughts {
+    margin-top: 45px;
+    padding: 27px 22px;
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+
+  .typing-text {
+    font-size: 25px;
+  }
+
+  .bottom-note {
+    padding: 25px 22px;
+    font-size: 7px;
+    letter-spacing: 2px;
   }
 }
 
-/* REDUCED MOTION */
+@media (max-width: 360px) {
+  h1 {
+    font-size: 43px;
+  }
+
+  .header-note {
+    font-size: 6px;
+  }
+
+  .bottom-note {
+    letter-spacing: 1px;
+  }
+}
 
 @media (prefers-reduced-motion: reduce) {
   #filmGrain {
@@ -351,69 +527,137 @@ footer {
 
 <body>
 
-<!-- INTRO LOADING -->
+<!-- INTRO -->
 
 <div id="intro">
   <div class="intro-content">
     <div class="intro-title">LIMBO</div>
     <div class="intro-line"></div>
-    <div class="intro-subtitle">What’s he feeling inside?</div>
+    <div class="intro-subtitle">A PLACE BETWEEN FEELINGS</div>
   </div>
 </div>
 
-<!-- FILM GRAIN -->
-
 <div id="filmGrain"></div>
+<div class="vignette"></div>
 
 <!-- HEADER -->
 
-<header>LIMBO</header>
+<header>
+  <div class="logo">LIMBO</div>
+  <div class="header-note">A PLACE BETWEEN FEELINGS</div>
+</header>
+
+<!-- MAIN -->
 
 <main>
 
-  <h2>ᕙ⁠(⁠⇀⁠‸⁠↼⁠‶⁠)⁠ᕗ</h2>
+  <section class="hero">
 
-  <!-- VIDEO -->
+    <div class="hero-copy">
 
-  <div class="video-container" id="videoContainer">
+      <div class="eyebrow">
+        NO. 001 — PERSONAL ARCHIVE
+      </div>
 
-    <video
-      id="player"
-      loop
-      playsinline
-      preload="auto"
-    >
-      <source
-        src="snaptik.vn_7616757629498494241.mp4"
-        type="video/mp4"
-      >
-    </video>
+      <h1>
+        Somewhere
+        <span>between</span>
+        feeling and
+        <span>forgetting.</span>
+      </h1>
 
-    <div class="play-overlay" id="playOverlay">
-      <button
-        class="play-button"
-        id="playButton"
-        aria-label="Play video"
-      >▶</button>
+      <p class="hero-description">
+        Some feelings never really leave.
+        They just become quieter with time.
+      </p>
+
+      <div class="hero-index">
+        A MOMENT THAT STAYED
+      </div>
+
+    </div>
+
+    <!-- VIDEO -->
+
+    <div class="video-section">
+
+      <div class="video-label">
+        <span>MEMORY / 001</span>
+        <span>PLAYBACK</span>
+      </div>
+
+      <div class="video-container">
+
+        <video
+          id="player"
+          loop
+          playsinline
+          preload="auto"
+        >
+          <source
+            src="snaptik.vn_7616757629498494241.mp4"
+            type="video/mp4"
+          >
+        </video>
+
+        <div class="play-overlay" id="playOverlay">
+
+          <button
+            class="play-button"
+            id="playButton"
+            aria-label="Play video"
+          >▶</button>
+
+        </div>
+
+      </div>
+
+      <div class="video-caption">
+        <span>AN UNFINISHED MEMORY</span>
+        <span>01 / 01</span>
+      </div>
+
+    </div>
+
+  </section>
+
+</main>
+
+<!-- THOUGHTS -->
+
+<section class="thoughts">
+
+  <div class="thoughts-label">
+    THOUGHTS<br>
+    THAT REMAIN
+  </div>
+
+  <div class="thoughts-content">
+
+    <div class="typing-text" id="typingText"></div>
+
+    <div class="thoughts-signature">
+      — LIMBO
     </div>
 
   </div>
 
-</main>
+</section>
 
-<!-- FOOTER -->
+<!-- BOTTOM -->
 
-<footer>
-  <div class="typing-text" id="typingText"></div>
-</footer>
+<div class="bottom-note">
+  <span>NOT EVERYTHING NEEDS TO BE SAID.</span>
+  <span>LIMBO © 2026</span>
+</div>
 
-<!-- SNOW CANVAS -->
+<!-- SNOW -->
 
 <canvas id="snow"></canvas>
 
 <script>
 
-/* INTRO LOADING */
+/* INTRO */
 
 const intro = document.getElementById("intro");
 
@@ -424,7 +668,7 @@ window.addEventListener("load", () => {
 });
 
 
-/* VIDEO WITH ORIGINAL SOUND */
+/* VIDEO */
 
 const player = document.getElementById("player");
 const playButton = document.getElementById("playButton");
@@ -438,11 +682,9 @@ function updatePlayButton() {
   if (player.paused || player.ended) {
     playOverlay.classList.remove("hidden");
     playButton.textContent = "▶";
-    playButton.setAttribute("aria-label", "Play video");
   } else {
     playOverlay.classList.add("hidden");
     playButton.textContent = "Ⅱ";
-    playButton.setAttribute("aria-label", "Pause video");
   }
 }
 
@@ -464,7 +706,7 @@ player.addEventListener("pause", updatePlayButton);
 player.addEventListener("ended", updatePlayButton);
 
 
-/* ADVANCED TYPEWRITER */
+/* TYPEWRITER */
 
 const typingText = document.getElementById("typingText");
 
@@ -521,13 +763,12 @@ window.addEventListener("load", () => {
 });
 
 
-/* LIMBO — ETHEREAL SNOW */
+/* ETHEREAL SNOW */
 
 const canvas = document.getElementById("snow");
 const ctx = canvas.getContext("2d");
 
 let flakes = [];
-let animationId;
 
 function resize() {
   const dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -548,17 +789,11 @@ function createFlakes() {
     return {
       x: Math.random() * window.innerWidth,
       y: Math.random() * window.innerHeight,
-
       r: 0.5 + depth * 1.4,
-
       speed: 0.2 + depth * 0.45,
-
       drift: Math.random() * 0.3 - 0.15,
-
       glow: 3 + depth * 5,
-
       opacity: 0.25 + depth * 0.35,
-
       pulse: Math.random() * Math.PI * 2
     };
   });
@@ -578,8 +813,6 @@ function animate() {
     const brightness =
       f.opacity * (0.85 + Math.sin(f.pulse) * 0.15);
 
-    /* SOFT BLUE-WHITE GLOW */
-
     ctx.beginPath();
 
     ctx.arc(
@@ -596,8 +829,6 @@ function animate() {
       `rgba(215,230,255,${brightness})`;
 
     ctx.fill();
-
-    /* WHITE LIGHT CENTER */
 
     ctx.beginPath();
 
@@ -618,8 +849,6 @@ function animate() {
 
     ctx.shadowBlur = 0;
 
-    /* SLOW MOVEMENT */
-
     f.y += f.speed;
     f.x += f.drift;
 
@@ -637,7 +866,7 @@ function animate() {
     }
   });
 
-  animationId = requestAnimationFrame(animate);
+  requestAnimationFrame(animate);
 }
 
 window.addEventListener("resize", () => {
