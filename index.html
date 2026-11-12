@@ -20,6 +20,7 @@
   --text: #dedee3;
   --muted: #777984;
   --border: rgba(255,255,255,0.09);
+  --cold: #c6d2e4;
 }
 
 html {
@@ -115,7 +116,9 @@ body {
   pointer-events: none;
   z-index: 998;
   opacity: 0.065;
+
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.55'/%3E%3C/svg%3E");
+
   animation: grainMove .22s steps(2) infinite;
 }
 
@@ -134,12 +137,13 @@ body {
   inset: 0;
   z-index: 997;
   pointer-events: none;
-  background: radial-gradient(
-    ellipse at center,
-    transparent 35%,
-    rgba(0,0,0,0.25) 75%,
-    rgba(0,0,0,0.72) 130%
-  );
+  background:
+    radial-gradient(
+      ellipse at center,
+      transparent 35%,
+      rgba(0,0,0,0.25) 75%,
+      rgba(0,0,0,0.72) 130%
+    );
 }
 
 /* HEADER */
@@ -169,7 +173,7 @@ header {
   color: #646672;
 }
 
-/* MAIN */
+/* MAIN LAYOUT */
 
 main {
   max-width: 1100px;
@@ -263,6 +267,7 @@ h1 span {
   background: #08090c;
   border: 1px solid rgba(220,225,240,0.11);
   overflow: hidden;
+
   box-shadow:
     0 25px 70px rgba(0,0,0,0.65),
     0 0 30px rgba(180,200,255,0.025);
@@ -300,6 +305,7 @@ video {
   justify-content: center;
   align-items: center;
   padding: 0 0 0 4px;
+
   border: 1px solid rgba(220,230,255,0.55);
   border-radius: 50%;
   background: rgba(0,0,0,0.4);
@@ -331,7 +337,7 @@ video {
   letter-spacing: 2px;
 }
 
-/* THOUGHTS */
+/* THOUGHTS SECTION */
 
 .thoughts {
   max-width: 1100px;
@@ -339,10 +345,12 @@ video {
   padding: 35px;
   border-top: 1px solid var(--border);
   border-bottom: 1px solid var(--border);
+
   display: grid;
   grid-template-columns: 180px 1fr;
   gap: 35px;
   align-items: start;
+
   animation: fadeIn 1.5s ease both;
   animation-delay: 1s;
 }
@@ -542,11 +550,10 @@ video {
 <!-- MAIN -->
 
 <main>
+
   <section class="hero">
 
     <div class="hero-copy">
-
-      <div class="eyebrow">A QUIET PLACE / 001</div>
 
       <h1>
         Somewhere
@@ -595,7 +602,6 @@ video {
             class="play-button"
             id="playButton"
             aria-label="Play video"
-            type="button"
           >▶</button>
 
         </div>
@@ -610,6 +616,7 @@ video {
     </div>
 
   </section>
+
 </main>
 
 <!-- THOUGHTS -->
@@ -645,11 +652,8 @@ video {
 <canvas id="snow"></canvas>
 
 <script>
-"use strict";
 
-/* =========================
-   INTRO
-========================= */
+/* INTRO */
 
 const intro = document.getElementById("intro");
 
@@ -660,9 +664,7 @@ window.addEventListener("load", () => {
 });
 
 
-/* =========================
-   VIDEO
-========================= */
+/* VIDEO */
 
 const player = document.getElementById("player");
 const playButton = document.getElementById("playButton");
@@ -673,28 +675,23 @@ player.volume = 1;
 player.controls = false;
 
 function updatePlayButton() {
-  const paused = player.paused || player.ended;
-
-  playOverlay.classList.toggle("hidden", !paused);
-
-  playButton.textContent = paused ? "▶" : "Ⅱ";
-
-  playButton.setAttribute(
-    "aria-label",
-    paused ? "Play video" : "Pause video"
-  );
+  if (player.paused || player.ended) {
+    playOverlay.classList.remove("hidden");
+    playButton.textContent = "▶";
+  } else {
+    playOverlay.classList.add("hidden");
+    playButton.textContent = "Ⅱ";
+  }
 }
 
-playButton.addEventListener("click", async () => {
+playButton.addEventListener("click", () => {
   if (player.paused) {
     player.muted = false;
 
-    try {
-      await player.play();
-    } catch (error) {
-      console.error("Video playback failed:", error);
+    player.play().catch(error => {
+      console.log("Video playback failed:", error);
       playOverlay.classList.remove("hidden");
-    }
+    });
   } else {
     player.pause();
   }
@@ -703,12 +700,9 @@ playButton.addEventListener("click", async () => {
 player.addEventListener("play", updatePlayButton);
 player.addEventListener("pause", updatePlayButton);
 player.addEventListener("ended", updatePlayButton);
-player.addEventListener("loadeddata", updatePlayButton);
 
 
-/* =========================
-   TYPEWRITER
-========================= */
+/* TYPEWRITER */
 
 const typingText = document.getElementById("typingText");
 
@@ -732,13 +726,12 @@ function typeMessage() {
   const currentMessage = messages[messageIndex];
 
   if (!deleting) {
+    typingText.textContent =
+      currentMessage.substring(0, charIndex + 1);
 
     charIndex++;
 
-    typingText.textContent =
-      currentMessage.substring(0, charIndex);
-
-    if (charIndex >= currentMessage.length) {
+    if (charIndex === currentMessage.length) {
       deleting = true;
       setTimeout(typeMessage, pauseAfterTyping);
     } else {
@@ -746,23 +739,18 @@ function typeMessage() {
     }
 
   } else {
+    typingText.textContent =
+      currentMessage.substring(0, charIndex - 1);
 
     charIndex--;
 
-    typingText.textContent =
-      currentMessage.substring(0, charIndex);
-
-    if (charIndex <= 0) {
+    if (charIndex === 0) {
       deleting = false;
-
-      messageIndex =
-        (messageIndex + 1) % messages.length;
-
+      messageIndex = (messageIndex + 1) % messages.length;
       setTimeout(typeMessage, pauseAfterDeleting);
     } else {
       setTimeout(typeMessage, deletingSpeed);
     }
-
   }
 }
 
@@ -771,9 +759,7 @@ window.addEventListener("load", () => {
 });
 
 
-/* =========================
-   ETHEREAL SNOW
-========================= */
+/* ETHEREAL SNOW */
 
 const canvas = document.getElementById("snow");
 const ctx = canvas.getContext("2d");
@@ -781,19 +767,13 @@ const ctx = canvas.getContext("2d");
 let flakes = [];
 
 function resize() {
-  const dpr = Math.min(
-    window.devicePixelRatio || 1,
-    2
-  );
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
 
   canvas.width = window.innerWidth * dpr;
   canvas.height = window.innerHeight * dpr;
 
-  canvas.style.width =
-    window.innerWidth + "px";
-
-  canvas.style.height =
-    window.innerHeight + "px";
+  canvas.style.width = window.innerWidth + "px";
+  canvas.style.height = window.innerHeight + "px";
 
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 }
@@ -827,8 +807,7 @@ function animate() {
     f.pulse += 0.012;
 
     const brightness =
-      f.opacity *
-      (0.85 + Math.sin(f.pulse) * 0.15);
+      f.opacity * (0.85 + Math.sin(f.pulse) * 0.15);
 
     ctx.beginPath();
 
