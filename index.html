@@ -178,7 +178,7 @@ header {
 main {
   max-width: 1100px;
   margin: auto;
-  padding: 90px 35px 60px;
+  padding: 90px 35px 35px;
 }
 
 .hero {
@@ -193,13 +193,6 @@ main {
 .hero-copy {
   animation: fadeIn 1.5s ease both;
   animation-delay: .3s;
-}
-
-.eyebrow {
-  font-size: 9px;
-  letter-spacing: 4px;
-  color: #707481;
-  margin-bottom: 25px;
 }
 
 h1 {
@@ -341,8 +334,8 @@ video {
 
 .thoughts {
   max-width: 1100px;
-  margin: 70px auto 0;
-  padding: 35px;
+  margin: 35px auto 0;
+  padding: 30px 35px;
   border-top: 1px solid var(--border);
   border-bottom: 1px solid var(--border);
 
@@ -439,11 +432,11 @@ video {
 
 @media (max-width: 700px) {
   header {
-    padding: 23px 22px;
+    padding: 17px 20px;
   }
 
   .logo {
-    font-size: 17px;
+    font-size: 16px;
   }
 
   .header-note {
@@ -452,64 +445,106 @@ video {
   }
 
   main {
-    padding: 65px 22px 35px;
+    padding: 25px 20px 10px;
   }
 
   .hero {
     grid-template-columns: 1fr;
-    gap: 38px;
+    gap: 22px;
+  }
+
+  .hero-copy {
+    text-align: center;
   }
 
   h1 {
-    font-size: 52px;
+    font-size: clamp(36px, 10vw, 46px);
+    line-height: 1;
   }
 
   .hero-description {
-    margin-top: 20px;
+    margin: 14px auto 0;
+    font-size: 10px;
+    line-height: 1.8;
   }
 
   .hero-index {
-    margin-top: 30px;
+    justify-content: center;
+    margin-top: 18px;
   }
 
   .video-label {
     font-size: 7px;
+    margin-bottom: 8px;
+  }
+
+  .video-container {
+    max-height: 28vh;
+  }
+
+  video {
+    width: 100%;
+    max-height: 28vh;
+    object-fit: contain;
   }
 
   .play-button {
-    width: 58px;
-    height: 58px;
+    width: 50px;
+    height: 50px;
   }
 
+  .video-caption {
+    margin-top: 9px;
+    font-size: 7px;
+  }
+
+  /* THOUGHTS */
+
   .thoughts {
-    margin-top: 45px;
-    padding: 27px 22px;
+    margin: 18px 20px 0;
+    padding: 17px 0;
     grid-template-columns: 1fr;
-    gap: 18px;
+    gap: 8px;
+  }
+
+  .thoughts-label {
+    font-size: 8px;
+    letter-spacing: 3px;
   }
 
   .typing-text {
-    font-size: 25px;
+    font-size: clamp(21px, 6vw, 25px);
+    line-height: 1.35;
+    min-height: 58px;
+  }
+
+  .thoughts-signature {
+    margin-top: 10px;
   }
 
   .bottom-note {
-    padding: 25px 22px;
-    font-size: 7px;
-    letter-spacing: 2px;
+    padding: 20px;
+    font-size: 6px;
+    letter-spacing: 1px;
+    gap: 12px;
   }
 }
 
 @media (max-width: 360px) {
   h1 {
-    font-size: 43px;
+    font-size: 36px;
   }
 
   .header-note {
     font-size: 6px;
   }
 
+  .typing-text {
+    font-size: 21px;
+  }
+
   .bottom-note {
-    letter-spacing: 1px;
+    letter-spacing: 0;
   }
 }
 
@@ -663,7 +698,6 @@ window.addEventListener("load", () => {
   }, 2200);
 });
 
-
 /* VIDEO */
 
 const player = document.getElementById("player");
@@ -700,7 +734,6 @@ playButton.addEventListener("click", () => {
 player.addEventListener("play", updatePlayButton);
 player.addEventListener("pause", updatePlayButton);
 player.addEventListener("ended", updatePlayButton);
-
 
 /* TYPEWRITER */
 
@@ -759,7 +792,6 @@ window.addEventListener("load", () => {
   setTimeout(typeMessage, 2800);
 });
 
-
 /* ETHEREAL SNOW */
 
 const canvas = document.getElementById("snow");
@@ -812,35 +844,21 @@ function animate() {
 
     ctx.beginPath();
 
-    ctx.arc(
-      f.x,
-      f.y,
-      f.r,
-      0,
-      Math.PI * 2
-    );
+    ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
 
     ctx.shadowBlur = f.glow;
     ctx.shadowColor = "rgba(195,220,255,0.8)";
-    ctx.fillStyle =
-      `rgba(215,230,255,${brightness})`;
+    ctx.fillStyle = `rgba(215,230,255,${brightness})`;
 
     ctx.fill();
 
     ctx.beginPath();
 
-    ctx.arc(
-      f.x,
-      f.y,
-      f.r * 0.45,
-      0,
-      Math.PI * 2
-    );
+    ctx.arc(f.x, f.y, f.r * 0.45, 0, Math.PI * 2);
 
     ctx.shadowBlur = f.glow * 0.5;
     ctx.shadowColor = "rgba(255,255,255,0.7)";
-    ctx.fillStyle =
-      `rgba(255,255,255,${brightness * 0.8})`;
+    ctx.fillStyle = `rgba(255,255,255,${brightness * 0.8})`;
 
     ctx.fill();
 
