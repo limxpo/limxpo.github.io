@@ -18,6 +18,7 @@
   --text: #d5d9e1;
   --muted: #858d9b;
   --border: rgba(190,205,225,0.09);
+  --storm-text-glow: 0;
 }
 
 html {
@@ -154,12 +155,41 @@ header {
   border-bottom: 1px solid var(--border);
 }
 
+/* LOGO GLOW */
+
 .logo {
-  color: #dfe4ec;
+  color: #dfe8f5;
   font-size: 17px;
   font-weight: 500;
   letter-spacing: 9px;
   padding-left: 9px;
+
+  text-shadow:
+    0 0 5px rgba(199,217,242,0.35),
+    0 0 14px rgba(150,185,230,0.2),
+    0 0 30px rgba(130,170,225,0.1),
+    0 0 38px rgba(180,205,245,calc(var(--storm-text-glow) * 0.8));
+
+  animation: logoBreathing 5s ease-in-out infinite;
+  transition: text-shadow 0.08s linear;
+}
+
+@keyframes logoBreathing {
+  0%, 100% {
+    opacity: 0.88;
+    text-shadow:
+      0 0 4px rgba(199,217,242,0.25),
+      0 0 12px rgba(150,185,230,0.14),
+      0 0 24px rgba(130,170,225,0.07);
+  }
+
+  50% {
+    opacity: 1;
+    text-shadow:
+      0 0 7px rgba(199,217,242,0.5),
+      0 0 18px rgba(150,185,230,0.3),
+      0 0 38px rgba(130,170,225,0.16);
+  }
 }
 
 /* VIDEO AREA */
@@ -254,6 +284,8 @@ video {
   animation-delay: .6s;
 }
 
+/* GLOWING TYPING TEXT */
+
 .typing-text {
   min-height: 48px;
   font-family: 'Cormorant Garamond', serif;
@@ -261,15 +293,52 @@ video {
   font-style: italic;
   font-weight: 400;
   line-height: 1.5;
-  color: #c0c9d6;
-  text-shadow: 0 0 25px rgba(155,185,220,0.12);
+  color: #c7d9f2;
   overflow-wrap: anywhere;
+
+  text-shadow:
+    0 0 4px rgba(199,217,242,0.35),
+    0 0 12px rgba(155,185,225,0.2),
+    0 0 25px rgba(130,170,220,0.12),
+    0 0 40px rgba(180,205,245,calc(var(--storm-text-glow) * 0.9));
+
+  animation: textBreathing 6s ease-in-out infinite;
+  transition: text-shadow 0.08s linear, color 0.4s ease;
+}
+
+@keyframes textBreathing {
+  0%, 100% {
+    text-shadow:
+      0 0 3px rgba(199,217,242,0.24),
+      0 0 10px rgba(155,185,225,0.13),
+      0 0 22px rgba(130,170,220,0.07);
+  }
+
+  50% {
+    text-shadow:
+      0 0 6px rgba(199,217,242,0.48),
+      0 0 17px rgba(155,185,225,0.27),
+      0 0 34px rgba(130,170,220,0.15);
+  }
+}
+
+/* GOODBYE SPECIAL GLOW */
+
+.typing-text.final-message {
+  color: #e0eafa;
+  text-shadow:
+    0 0 6px rgba(210,225,250,0.55),
+    0 0 18px rgba(165,195,235,0.32),
+    0 0 38px rgba(140,180,230,0.2);
 }
 
 .typing-text::after {
   content: "|";
   margin-left: 4px;
-  color: #9baec5;
+  color: #b9cce5;
+  text-shadow:
+    0 0 6px rgba(190,215,250,0.65),
+    0 0 15px rgba(145,185,235,0.4);
   animation: blink 1s infinite;
 }
 
@@ -322,7 +391,7 @@ video {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  #fog, #filmGrain {
+  #fog, #filmGrain, .logo, .typing-text {
     animation-duration: 60s;
   }
 }
@@ -431,6 +500,13 @@ const pauseAfterDeleting = 700;
 function typeMessage() {
   const currentMessage = messages[messageIndex];
 
+  /* Special glow for the final message */
+
+  typingText.classList.toggle(
+    "final-message",
+    messageIndex === messages.length - 1
+  );
+
   if (!deleting) {
     typingText.textContent = currentMessage.substring(0, charIndex + 1);
     charIndex++;
@@ -484,10 +560,7 @@ function createDrop(initial = false) {
     x: random(-20, width + 20),
     y: initial ? random(-20, height) : random(-80, -10),
     length: random(9, 17) + depth * 17,
-
-    /* Slightly slower rain */
     speed: random(4, 7) + depth * 4,
-
     thickness: 0.45 + depth * 0.85,
     opacity: 0.13 + depth * 0.3,
     drift: random(0.7, 1.6) + depth * 0.7
@@ -588,8 +661,6 @@ function drawBolt(bolt, alpha, main = false) {
     ctx.lineTo(point.x, point.y);
   }
 
-  /* Soft atmospheric glow */
-
   ctx.strokeStyle = `rgba(155,190,245,${alpha * 0.22})`;
   ctx.lineWidth = main ? 9 : 4;
   ctx.lineCap = "round";
@@ -597,8 +668,6 @@ function drawBolt(bolt, alpha, main = false) {
   ctx.shadowBlur = main ? 34 : 18;
   ctx.shadowColor = "rgba(145,185,255,0.9)";
   ctx.stroke();
-
-  /* Bright lightning core */
 
   ctx.beginPath();
   ctx.moveTo(bolt.points[0].x, bolt.points[0].y);
@@ -659,8 +728,6 @@ function startLightning() {
       )
     );
 
-    /* Occasional secondary bolt */
-
     if (Math.random() > 0.7) {
       lightningBolts.push(
         createBolt(
@@ -672,7 +739,6 @@ function startLightning() {
       );
     }
   } else {
-    /* Distant lightning: sky illuminates without a visible bolt */
     lightningBolts = [];
   }
 
@@ -706,8 +772,6 @@ function updateLightning(delta) {
         if (flashTimer <= flash.duration) {
           const progress = flashTimer / flash.duration;
 
-          /* Fast attack, softer fade */
-
           const fade = progress < 0.18
             ? progress / 0.18
             : 1 - ((progress - 0.18) / 0.82);
@@ -732,6 +796,13 @@ function updateLightning(delta) {
   lightningFlash = currentFlashStrength;
 
   stormGlow.style.opacity = lightningFlash;
+
+  /* Synchronize text glow with lightning */
+
+  document.documentElement.style.setProperty(
+    "--storm-text-glow",
+    Math.min(1, lightningFlash * 4)
+  );
 }
 
 
