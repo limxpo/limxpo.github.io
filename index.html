@@ -22,11 +22,9 @@
   --border: rgba(190,205,225,0.09);
 }
 
-/* BACKGROUND */
-
 html {
   min-height: 100%;
-  background: #030609;
+  background: #000;
   scroll-behavior: smooth;
 }
 
@@ -36,31 +34,7 @@ body {
   color: var(--text);
   font-family: 'Manrope', sans-serif;
   overflow-x: hidden;
-
-  background:
-    radial-gradient(
-      ellipse at 50% 12%,
-      rgba(53,67,86,0.25) 0%,
-      transparent 48%
-    ),
-    radial-gradient(
-      ellipse at 85% 65%,
-      rgba(28,43,58,0.18) 0%,
-      transparent 50%
-    ),
-    radial-gradient(
-      ellipse at 10% 85%,
-      rgba(20,31,44,0.2) 0%,
-      transparent 45%
-    ),
-    linear-gradient(
-      180deg,
-      #080d14 0%,
-      #05090f 45%,
-      #020407 100%
-    );
-
-  background-attachment: fixed;
+  background: #000;
 }
 
 /* DARK ATMOSPHERE */
@@ -73,18 +47,29 @@ body::before {
   z-index: 1;
 
   background:
-    linear-gradient(
-      180deg,
-      rgba(2,5,10,0.08) 0%,
-      rgba(1,3,7,0.2) 50%,
-      rgba(0,0,0,0.65) 100%
-    ),
     radial-gradient(
       ellipse at center,
-      transparent 15%,
-      rgba(0,0,0,0.35) 75%,
-      rgba(0,0,0,0.8) 120%
+      transparent 20%,
+      rgba(0,0,0,0.3) 75%,
+      rgba(0,0,0,0.75) 120%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(0,0,0,0.08),
+      rgba(0,0,0,0.35)
     );
+}
+
+/* LIGHTNING ATMOSPHERE */
+
+#stormGlow {
+  position: fixed;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  opacity: 0;
+  background: rgba(195,215,255,0.08);
+  transition: opacity 0.08s linear;
 }
 
 /* FILM GRAIN */
@@ -163,7 +148,7 @@ main {
   width: 100%;
   overflow: hidden;
 
-  background: #030609;
+  background: #000;
   border: 1px solid rgba(190,210,235,0.12);
 
   box-shadow:
@@ -175,7 +160,7 @@ video {
   display: block;
   width: 100%;
   height: auto;
-  background: #030609;
+  background: #000;
 }
 
 /* PLAY BUTTON */
@@ -288,14 +273,13 @@ video {
 
 #rain {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
+  inset: 0;
+  width: 100%;
+  height: 100%;
   display: block;
   pointer-events: none;
   z-index: 5;
-  opacity: 0.85;
+  opacity: 1;
 }
 
 /* MOBILE */
@@ -329,6 +313,7 @@ video {
 <body>
 
 <div id="filmGrain"></div>
+<div id="stormGlow"></div>
 
 <div class="page">
 
@@ -338,9 +323,7 @@ video {
 
   <main>
     <section class="hero">
-
       <div class="video-section">
-
         <div class="video-container">
 
           <video
@@ -356,19 +339,15 @@ video {
           </video>
 
           <div class="play-overlay" id="playOverlay">
-
             <button
               class="play-button"
               id="playButton"
               aria-label="Play video"
             >▶</button>
-
           </div>
 
         </div>
-
       </div>
-
     </section>
   </main>
 
@@ -475,18 +454,53 @@ function typeMessage() {
 typeMessage();
 
 
-/* LIGHT RAIN */
+/* REALISTIC RAIN + RANDOM LIGHTNING */
 
 const canvas = document.getElementById("rain");
 const ctx = canvas.getContext("2d");
+const stormGlow = document.getElementById("stormGlow");
 
-let drops = [];
 let width = 0;
 let height = 0;
+let drops = [];
+let wind = -0.8;
+
+let lightningBolts = [];
+let lightningFlash = 0;
+let nextLightning = 0;
+let lightningActive = false;
+
+let lastFrame = 0;
 let animationId = null;
 
+const random = (min, max) =>
+  Math.random() * (max - min) + min;
+
+
+/* CREATE RAIN DROP */
+
+function createDrop(initial = false) {
+  const depth = Math.random();
+
+  return {
+    x: random(-20, width + 20),
+    y: initial ? random(-20, height) : random(-80, -10),
+
+    length: random(9, 17) + depth * 17,
+    speed: random(5, 9) + depth * 6,
+
+    thickness: 0.45 + depth * 0.85,
+    opacity: 0.13 + depth * 0.3,
+
+    drift: random(0.7, 1.6) + depth * 0.7
+  };
+}
+
+
+/* RESIZE CANVAS */
+
 function resizeRain() {
-  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
 
   width = window.innerWidth;
   height = window.innerHeight;
@@ -499,65 +513,240 @@ function resizeRain() {
 
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-  createRain();
-}
-
-function createRain() {
   const count = Math.min(
-    180,
-    Math.max(80, Math.floor(width * height / 4000))
+    260,
+    Math.max(110, Math.floor(width * height / 2600))
   );
 
-  drops = Array.from({ length: count }, () => ({
-    x: Math.random() * width,
-    y: Math.random() * height,
-    length: 10 + Math.random() * 17,
-    speed: 2.5 + Math.random() * 3,
-    drift: -0.7 - Math.random() * 0.9,
-    opacity: 0.22 + Math.random() * 0.35,
-    thickness: 0.6 + Math.random() * 0.6
-  }));
+  drops = Array.from(
+    { length: count },
+    () => createDrop(true)
+  );
 }
 
-function drawRain() {
+
+/* LIGHTNING GENERATOR */
+
+function createBolt(x, y, length, spread, depth = 0) {
+  const points = [{ x, y }];
+
+  let currentX = x;
+  let currentY = y;
+
+  const segments = Math.floor(random(10, 17));
+
+  for (let i = 0; i < segments; i++) {
+    currentX += random(-spread, spread);
+    currentY += length / segments;
+
+    points.push({
+      x: currentX,
+      y: currentY
+    });
+  }
+
+  const branches = [];
+
+  if (depth < 2) {
+    for (let i = 2; i < points.length - 2; i += 3) {
+      if (Math.random() > 0.62) {
+        const point = points[i];
+
+        branches.push(
+          createBolt(
+            point.x,
+            point.y,
+            length * random(0.2, 0.4),
+            spread * 0.65,
+            depth + 1
+          )
+        );
+      }
+    }
+  }
+
+  return {
+    points,
+    branches
+  };
+}
+
+
+/* DRAW LIGHTNING */
+
+function drawBolt(bolt, alpha, main = false) {
+  ctx.beginPath();
+
+  ctx.moveTo(
+    bolt.points[0].x,
+    bolt.points[0].y
+  );
+
+  for (let i = 1; i < bolt.points.length; i++) {
+    const point = bolt.points[i];
+
+    ctx.lineTo(point.x, point.y);
+  }
+
+  ctx.strokeStyle =
+    `rgba(215,230,255,${alpha})`;
+
+  ctx.lineWidth = main ? 2.1 : 1.1;
+  ctx.lineCap = "round";
+  ctx.lineJoin = "round";
+
+  ctx.shadowBlur = main ? 22 : 12;
+  ctx.shadowColor = "rgba(175,205,255,0.9)";
+
+  ctx.stroke();
+
+  bolt.branches.forEach(branch => {
+    drawBolt(branch, alpha * 0.65, false);
+  });
+}
+
+
+/* START LIGHTNING */
+
+function startLightning() {
+  const x = random(width * 0.12, width * 0.88);
+
+  const bolt = createBolt(
+    x,
+    random(-30, 10),
+    height * random(0.35, 0.7),
+    random(30, 65)
+  );
+
+  lightningBolts = [bolt];
+
+  lightningFlash = random(0.13, 0.24);
+  lightningActive = true;
+
+  // Occasionally create a second distant bolt
+  if (Math.random() > 0.68) {
+    lightningBolts.push(
+      createBolt(
+        random(width * 0.1, width * 0.9),
+        0,
+        height * random(0.2, 0.4),
+        30
+      )
+    );
+  }
+}
+
+
+/* LIGHTNING TIMING */
+
+function updateLightning(delta) {
+  const now = Date.now();
+
+  if (!lightningActive && now >= nextLightning) {
+    startLightning();
+
+    nextLightning =
+      now + random(9000, 23000);
+  }
+
+  if (lightningActive) {
+    // Smoothly fade the flash
+    lightningFlash *= Math.pow(0.91, delta / 16.67);
+
+    if (lightningFlash < 0.008) {
+      lightningFlash = 0;
+      lightningActive = false;
+      lightningBolts = [];
+
+      // Random waiting time between storms
+      nextLightning =
+        now + random(9000, 23000);
+    }
+  }
+
+  stormGlow.style.opacity = lightningFlash;
+}
+
+
+/* DRAW RAIN */
+
+function drawRain(timestamp = 0) {
+  const delta = lastFrame
+    ? Math.min(timestamp - lastFrame, 40)
+    : 16.67;
+
+  lastFrame = timestamp;
+
   ctx.clearRect(0, 0, width, height);
 
+  // Slight wind variation
+  wind += random(-0.006, 0.006);
+  wind = Math.max(-1.5, Math.min(-0.35, wind));
+
+  // Draw rain
   drops.forEach(drop => {
+    const dx = wind * drop.drift;
+
     ctx.beginPath();
 
     ctx.moveTo(drop.x, drop.y);
 
     ctx.lineTo(
-      drop.x + drop.drift,
+      drop.x + dx * 1.7,
       drop.y + drop.length
     );
 
     ctx.strokeStyle =
-      `rgba(195, 215, 238, ${drop.opacity})`;
+      `rgba(195,215,238,${drop.opacity})`;
 
     ctx.lineWidth = drop.thickness;
     ctx.lineCap = "round";
+
     ctx.stroke();
 
-    drop.x += drop.drift;
-    drop.y += drop.speed;
+    drop.x += dx * (delta / 16.67);
+    drop.y += drop.speed * (delta / 16.67);
 
-    if (drop.y > height + drop.length) {
-      drop.y = -drop.length;
-      drop.x = Math.random() * width;
-    }
-
-    if (drop.x < -10) {
-      drop.x = width + 10;
+    if (
+      drop.y > height + drop.length ||
+      drop.x < -40 ||
+      drop.x > width + 40
+    ) {
+      Object.assign(drop, createDrop());
     }
   });
+
+  // Update and render lightning
+  updateLightning(delta);
+
+  if (lightningActive && lightningBolts.length) {
+    ctx.save();
+
+    lightningBolts.forEach((bolt, index) => {
+      drawBolt(
+        bolt,
+        index === 0
+          ? Math.min(1, lightningFlash * 4)
+          : Math.min(0.7, lightningFlash * 2),
+        index === 0
+      );
+    });
+
+    ctx.restore();
+  }
 
   animationId = requestAnimationFrame(drawRain);
 }
 
+
+/* INITIALIZE */
+
 window.addEventListener("resize", resizeRain);
 
 resizeRain();
+
+nextLightning = Date.now() + random(5000, 10000);
+
 drawRain();
 
 </script>
