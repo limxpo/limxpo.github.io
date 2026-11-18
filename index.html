@@ -17,13 +17,16 @@
 }
 
 :root {
-  --text: #d5d6dc;
-  --muted: #777984;
-  --border: rgba(210,220,240,0.08);
+  --text: #d5d9e1;
+  --muted: #858d9b;
+  --border: rgba(190,205,225,0.09);
 }
 
+/* BACKGROUND */
+
 html {
-  background: #030405;
+  min-height: 100%;
+  background: #030609;
   scroll-behavior: smooth;
 }
 
@@ -36,14 +39,31 @@ body {
 
   background:
     radial-gradient(
-      ellipse at 50% 35%,
-      #11151b 0%,
-      #080a0e 48%,
-      #030405 100%
+      ellipse at 50% 12%,
+      rgba(53,67,86,0.25) 0%,
+      transparent 48%
+    ),
+    radial-gradient(
+      ellipse at 85% 65%,
+      rgba(28,43,58,0.18) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      ellipse at 10% 85%,
+      rgba(20,31,44,0.2) 0%,
+      transparent 45%
+    ),
+    linear-gradient(
+      180deg,
+      #080d14 0%,
+      #05090f 45%,
+      #020407 100%
     );
+
+  background-attachment: fixed;
 }
 
-/* ATMOSPHERE */
+/* DARK ATMOSPHERE */
 
 body::before {
   content: "";
@@ -53,9 +73,15 @@ body::before {
   z-index: 1;
 
   background:
+    linear-gradient(
+      180deg,
+      rgba(2,5,10,0.08) 0%,
+      rgba(1,3,7,0.2) 50%,
+      rgba(0,0,0,0.65) 100%
+    ),
     radial-gradient(
-      ellipse at 50% 40%,
-      transparent 20%,
+      ellipse at center,
+      transparent 15%,
       rgba(0,0,0,0.35) 75%,
       rgba(0,0,0,0.8) 120%
     );
@@ -107,7 +133,7 @@ header {
 }
 
 .logo {
-  color: #dfe0e5;
+  color: #dfe4ec;
   font-size: 17px;
   font-weight: 500;
   letter-spacing: 9px;
@@ -137,19 +163,19 @@ main {
   width: 100%;
   overflow: hidden;
 
-  background: #050608;
-  border: 1px solid rgba(210,220,240,0.1);
+  background: #030609;
+  border: 1px solid rgba(190,210,235,0.12);
 
   box-shadow:
-    0 25px 75px rgba(0,0,0,0.65),
-    0 0 35px rgba(150,180,220,0.035);
+    0 25px 85px rgba(0,0,0,0.8),
+    0 0 45px rgba(100,135,175,0.06);
 }
 
 video {
   display: block;
   width: 100%;
   height: auto;
-  background: #050608;
+  background: #030609;
 }
 
 /* PLAY BUTTON */
@@ -162,7 +188,7 @@ video {
   justify-content: center;
   align-items: center;
 
-  background: rgba(0,0,0,0.18);
+  background: rgba(0,0,0,0.2);
   transition: opacity .4s ease, visibility .4s ease;
 }
 
@@ -185,8 +211,8 @@ video {
   border: 1px solid rgba(220,230,245,0.5);
   border-radius: 50%;
 
-  background: rgba(0,0,0,0.35);
-  color: #e5e8ef;
+  background: rgba(3,8,15,0.55);
+  color: #e5eaf2;
 
   font-size: 19px;
   cursor: pointer;
@@ -196,7 +222,7 @@ video {
 }
 
 .play-button:hover {
-  background: rgba(190,210,240,0.12);
+  background: rgba(160,185,215,0.14);
   transform: scale(1.06);
 }
 
@@ -227,8 +253,8 @@ video {
   font-weight: 400;
   line-height: 1.5;
 
-  color: #bfc3cd;
-  text-shadow: 0 0 20px rgba(170,195,225,0.08);
+  color: #c0c9d6;
+  text-shadow: 0 0 25px rgba(155,185,220,0.12);
 
   overflow-wrap: anywhere;
 }
@@ -236,26 +262,12 @@ video {
 .typing-text::after {
   content: "|";
   margin-left: 4px;
-  color: #9ba8bd;
+  color: #9baec5;
   animation: blink 1s infinite;
 }
 
 @keyframes blink {
   50% { opacity: 0; }
-}
-
-/* FOOTER */
-
-footer {
-  max-width: 1050px;
-  margin: 35px auto 0;
-  padding: 25px 35px;
-
-  text-align: center;
-
-  color: #555a64;
-  font-size: 8px;
-  letter-spacing: 4px;
 }
 
 /* ANIMATION */
@@ -276,17 +288,19 @@ footer {
 
 #rain {
   position: fixed;
-  inset: 0;
-  width: 100%;
-  height: 100%;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: block;
   pointer-events: none;
   z-index: 5;
+  opacity: 0.85;
 }
 
 /* MOBILE */
 
 @media (max-width: 700px) {
-
   header {
     padding: 23px 20px;
   }
@@ -307,24 +321,6 @@ footer {
 
   .typing-text {
     font-size: 25px;
-  }
-
-  footer {
-    margin-top: 20px;
-    padding: 25px 15px;
-  }
-}
-
-/* REDUCED MOTION */
-
-@media (prefers-reduced-motion: reduce) {
-  #filmGrain {
-    animation: none;
-  }
-
-  *, *::before, *::after {
-    animation-duration: .01ms !important;
-    animation-iteration-count: 1 !important;
   }
 }
 </style>
@@ -487,10 +483,7 @@ const ctx = canvas.getContext("2d");
 let drops = [];
 let width = 0;
 let height = 0;
-
-const reduceMotion = window.matchMedia(
-  "(prefers-reduced-motion: reduce)"
-).matches;
+let animationId = null;
 
 function resizeRain() {
   const dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -511,18 +504,18 @@ function resizeRain() {
 
 function createRain() {
   const count = Math.min(
-    150,
-    Math.max(45, Math.floor(width * height / 5000))
+    180,
+    Math.max(80, Math.floor(width * height / 4000))
   );
 
   drops = Array.from({ length: count }, () => ({
     x: Math.random() * width,
     y: Math.random() * height,
-    length: 9 + Math.random() * 15,
-    speed: 2 + Math.random() * 2.5,
-    drift: -0.6 - Math.random() * 0.7,
-    opacity: 0.12 + Math.random() * 0.2,
-    thickness: 0.5 + Math.random() * 0.5
+    length: 10 + Math.random() * 17,
+    speed: 2.5 + Math.random() * 3,
+    drift: -0.7 - Math.random() * 0.9,
+    opacity: 0.22 + Math.random() * 0.35,
+    thickness: 0.6 + Math.random() * 0.6
   }));
 }
 
@@ -530,7 +523,6 @@ function drawRain() {
   ctx.clearRect(0, 0, width, height);
 
   drops.forEach(drop => {
-
     ctx.beginPath();
 
     ctx.moveTo(drop.x, drop.y);
@@ -541,7 +533,7 @@ function drawRain() {
     );
 
     ctx.strokeStyle =
-      `rgba(190, 205, 225, ${drop.opacity})`;
+      `rgba(195, 215, 238, ${drop.opacity})`;
 
     ctx.lineWidth = drop.thickness;
     ctx.lineCap = "round";
@@ -558,21 +550,15 @@ function drawRain() {
     if (drop.x < -10) {
       drop.x = width + 10;
     }
-
   });
 
-  if (!reduceMotion) {
-    requestAnimationFrame(drawRain);
-  }
+  animationId = requestAnimationFrame(drawRain);
 }
 
 window.addEventListener("resize", resizeRain);
 
 resizeRain();
-
-if (!reduceMotion) {
-  drawRain();
-}
+drawRain();
 
 </script>
 
