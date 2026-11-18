@@ -85,17 +85,6 @@ body::before {
   100% { transform: translate(1%,1%); }
 }
 
-/* RAIN */
-
-#rain {
-  position: fixed;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  z-index: 3;
-}
-
 /* MAIN CONTENT */
 
 .page {
@@ -125,49 +114,22 @@ header {
   padding-left: 9px;
 }
 
-/* HERO */
+/* VIDEO AREA */
 
 main {
-  max-width: 1050px;
+  max-width: 850px;
   margin: auto;
-  padding: 85px 35px 30px;
+  padding: 75px 30px 20px;
 }
 
 .hero {
-  display: grid;
-  grid-template-columns: 0.8fr 1.3fr;
-  align-items: center;
-  gap: 65px;
-}
-
-/* TITLE */
-
-.hero-copy {
-  animation: fadeIn 1.5s ease both;
-}
-
-h1 {
-  margin: 0;
-
-  font-family: 'Cormorant Garamond', serif;
-  font-size: clamp(45px, 6vw, 72px);
-  font-weight: 400;
-  line-height: 1.08;
-
-  color: #d9d9df;
-}
-
-h1 span {
   display: block;
-  color: #777e8b;
-  font-style: italic;
+  width: 100%;
 }
-
-/* VIDEO */
 
 .video-section {
+  width: 100%;
   animation: fadeIn 1.8s ease both;
-  animation-delay: .2s;
 }
 
 .video-container {
@@ -246,7 +208,7 @@ video {
 
 .thoughts {
   max-width: 760px;
-  margin: 75px auto 0;
+  margin: 65px auto 0;
   padding: 30px 25px;
 
   border-top: 1px solid var(--border);
@@ -310,6 +272,17 @@ footer {
   }
 }
 
+/* RAIN CANVAS */
+
+#rain {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 5;
+}
+
 /* MOBILE */
 
 @media (max-width: 700px) {
@@ -320,23 +293,6 @@ footer {
 
   main {
     padding: 65px 20px 20px;
-  }
-
-  .hero {
-    grid-template-columns: 1fr;
-    gap: 30px;
-  }
-
-  .hero-copy {
-    text-align: center;
-  }
-
-  h1 {
-    font-size: clamp(43px, 11vw, 55px);
-  }
-
-  .video-section {
-    width: 100%;
   }
 
   .play-button {
@@ -356,16 +312,6 @@ footer {
   footer {
     margin-top: 20px;
     padding: 25px 15px;
-  }
-}
-
-@media (max-width: 360px) {
-  h1 {
-    font-size: 42px;
-  }
-
-  .typing-text {
-    font-size: 22px;
   }
 }
 
@@ -396,15 +342,6 @@ footer {
 
   <main>
     <section class="hero">
-
-      <div class="hero-copy">
-        <h1>
-          Somewhere
-          <span>between</span>
-          feeling and
-          <span>forgetting.</span>
-        </h1>
-      </div>
 
       <div class="video-section">
 
@@ -552,9 +489,8 @@ const canvas = document.getElementById("rain");
 const ctx = canvas.getContext("2d");
 
 let drops = [];
-let width = window.innerWidth;
-let height = window.innerHeight;
-let animationId;
+let width = 0;
+let height = 0;
 
 const reduceMotion = window.matchMedia(
   "(prefers-reduced-motion: reduce)"
@@ -566,8 +502,8 @@ function resizeRain() {
   width = window.innerWidth;
   height = window.innerHeight;
 
-  canvas.width = width * dpr;
-  canvas.height = height * dpr;
+  canvas.width = Math.floor(width * dpr);
+  canvas.height = Math.floor(height * dpr);
 
   canvas.style.width = width + "px";
   canvas.style.height = height + "px";
@@ -579,22 +515,19 @@ function resizeRain() {
 
 function createRain() {
   const count = Math.min(
-    110,
-    Math.floor(width * height / 8500)
+    150,
+    Math.max(45, Math.floor(width * height / 5000))
   );
 
-  drops = Array.from({ length: count }, () => {
-    return {
-      x: Math.random() * width,
-      y: Math.random() * height,
-
-      length: 8 + Math.random() * 13,
-      speed: 2 + Math.random() * 2.5,
-      drift: -0.7 - Math.random() * 0.5,
-      opacity: 0.08 + Math.random() * 0.2,
-      thickness: 0.4 + Math.random() * 0.5
-    };
-  });
+  drops = Array.from({ length: count }, () => ({
+    x: Math.random() * width,
+    y: Math.random() * height,
+    length: 9 + Math.random() * 15,
+    speed: 2 + Math.random() * 2.5,
+    drift: -0.6 - Math.random() * 0.7,
+    opacity: 0.12 + Math.random() * 0.2,
+    thickness: 0.5 + Math.random() * 0.5
+  }));
 }
 
 function drawRain() {
@@ -612,7 +545,7 @@ function drawRain() {
     );
 
     ctx.strokeStyle =
-      `rgba(190,210,235,${drop.opacity})`;
+      `rgba(190, 205, 225, ${drop.opacity})`;
 
     ctx.lineWidth = drop.thickness;
     ctx.lineCap = "round";
@@ -632,7 +565,9 @@ function drawRain() {
 
   });
 
-  animationId = requestAnimationFrame(drawRain);
+  if (!reduceMotion) {
+    requestAnimationFrame(drawRain);
+  }
 }
 
 window.addEventListener("resize", resizeRain);
