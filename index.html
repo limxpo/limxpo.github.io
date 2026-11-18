@@ -1,1393 +1,868 @@
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>ᕙ⁠(⁠⇀⁠‸⁠↼⁠‶⁠)⁠ᕗ</title>
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600&family=Cormorant+Garamond:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
-
-<style>
-* { box-sizing: border-box; }
-
-:root {
-  --text: #d5d9e1;
-  --muted: #858d9b;
-  --border: rgba(190,205,225,0.09);
-}
-
-html {
-  min-height: 100%;
-  background: #000;
-  scroll-behavior: smooth;
-}
-
-body {
-  margin: 0;
-  min-height: 100vh;
-  color: var(--text);
-  font-family: 'Manrope', sans-serif;
-  overflow-x: hidden;
-  background: #000;
-}
-
-/* DARK ATMOSPHERE */
-
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 1;
-  background:
-    radial-gradient(ellipse at center, transparent 20%, rgba(0,0,0,0.3) 75%, rgba(0,0,0,0.75) 120%),
-    linear-gradient(180deg, rgba(0,0,0,0.08), rgba(0,0,0,0.35));
-}
-
-/* MOONLIGHT */
-
-#moonlight {
-  position: fixed;
-  inset: 0;
-  z-index: 1;
-  pointer-events: none;
-  background:
-    radial-gradient(ellipse at 50% -15%,
-      rgba(150,165,195,0.105) 0%,
-      rgba(95,110,145,0.035) 30%,
-      transparent 62%);
-  opacity: 0.8;
-}
-
-/* MULTI-LAYER FOG */
-
-#fog {
-  position: fixed;
-  inset: -25%;
-  z-index: 2;
-  pointer-events: none;
-  overflow: hidden;
-  opacity: 0.24;
-  background:
-    radial-gradient(ellipse at 20% 55%, rgba(150,160,180,0.14) 0%, transparent 42%),
-    radial-gradient(ellipse at 75% 35%, rgba(115,130,155,0.12) 0%, transparent 38%),
-    radial-gradient(ellipse at 50% 85%, rgba(130,140,160,0.10) 0%, transparent 45%);
-  filter: blur(55px);
-  animation: fogDrift 32s ease-in-out infinite alternate;
-}
-
-#fog::before,
-#fog::after {
-  content: "";
-  position: absolute;
-  inset: -10%;
-  border-radius: 50%;
-  pointer-events: none;
-}
-
-#fog::before {
-  background:
-    radial-gradient(ellipse at 25% 65%, rgba(180,195,220,0.13), transparent 38%),
-    radial-gradient(ellipse at 80% 70%, rgba(145,160,190,0.10), transparent 42%);
-  filter: blur(65px);
-  animation: fogLayerOne 42s ease-in-out infinite alternate;
-}
-
-#fog::after {
-  background:
-    radial-gradient(ellipse at 65% 25%, rgba(160,175,205,0.11), transparent 40%),
-    radial-gradient(ellipse at 15% 30%, rgba(125,145,180,0.08), transparent 38%);
-  filter: blur(85px);
-  animation: fogLayerTwo 55s ease-in-out infinite alternate;
-}
-
-@keyframes fogDrift {
-  0% { transform: translate3d(-4%, 2%, 0) scale(1); }
-  50% { transform: translate3d(3%, -2%, 0) scale(1.08); }
-  100% { transform: translate3d(5%, 3%, 0) scale(1.03); }
-}
-
-@keyframes fogLayerOne {
-  from { transform: translate(-3%, 2%) scale(1); }
-  to { transform: translate(4%, -3%) scale(1.12); }
-}
-
-@keyframes fogLayerTwo {
-  from { transform: translate(3%, -2%) scale(1.08); }
-  to { transform: translate(-4%, 3%) scale(1); }
-}
-
-/* LIGHTNING ATMOSPHERE */
-
-#stormGlow {
-  position: fixed;
-  inset: 0;
-  z-index: 3;
-  pointer-events: none;
-  opacity: 0;
-  background:
-    radial-gradient(ellipse at 50% 25%,
-      rgba(205,220,255,0.13),
-      transparent 75%),
-    rgba(180,205,245,0.08);
-  transition: opacity 0.035s linear;
-}
-
-/* FILM GRAIN */
-
-#filmGrain {
-  position: fixed;
-  inset: -50%;
-  width: 200%;
-  height: 200%;
-  pointer-events: none;
-  z-index: 2;
-  opacity: 0.045;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.55'/%3E%3C/svg%3E");
-  animation: grainMove .3s steps(2) infinite;
-}
-
-@keyframes grainMove {
-  0% { transform: translate(0,0); }
-  25% { transform: translate(-1%,1%); }
-  50% { transform: translate(1%,-1%); }
-  75% { transform: translate(-1%,-1%); }
-  100% { transform: translate(1%,1%); }
-}
-
-/* MAGIC PARTICLES */
-
-#magicParticles {
-  position: fixed;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 3;
-  pointer-events: none;
-}
-
-/* MAIN CONTENT */
-
-.page {
-  position: relative;
-  z-index: 4;
-}
-
-/* HEADER */
-
-header {
-  max-width: 1100px;
-  margin: auto;
-  padding: 27px 35px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-bottom: 1px solid var(--border);
-}
-
-.logo {
-  color: #dfe4ec;
-  font-size: 17px;
-  font-weight: 500;
-  letter-spacing: 9px;
-  padding-left: 9px;
-}
-
-/* VIDEO AREA */
-
-main {
-  max-width: 850px;
-  margin: auto;
-  padding: 75px 30px 20px;
-}
-
-.hero {
-  display: block;
-  width: 100%;
-}
-
-.video-section {
-  width: 100%;
-  animation: fadeIn 1.8s ease both;
-}
-
-.video-container {
-  position: relative;
-  width: 100%;
-  overflow: hidden;
-  background: #000;
-  border: 1px solid rgba(190,210,235,0.12);
-  box-shadow:
-    0 25px 85px rgba(0,0,0,0.8),
-    0 0 45px rgba(100,135,175,0.06);
-}
-
-/* LIGHTNING REFLECTION ON VIDEO */
-
-.video-container::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  opacity: 0;
-  background:
-    radial-gradient(
-      ellipse at 50% 15%,
-      rgba(205,220,255,0.24),
-      transparent 75%
-    );
-  mix-blend-mode: screen;
-  transition: opacity 0.05s linear;
-}
-
-.video-container.lightning-reflection::after {
-  opacity: var(--reflection-strength, 0);
-}
-
-video {
-  display: block;
-  width: 100%;
-  height: auto;
-  background: #000;
-}
-
-/* PLAY BUTTON */
-
-.play-overlay {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: rgba(0,0,0,0.2);
-  transition: opacity .4s ease, visibility .4s ease;
-}
-
-.play-overlay.hidden {
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-}
-
-.play-button {
-  width: 60px;
-  height: 60px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding-left: 4px;
-  border: 1px solid rgba(220,230,245,0.5);
-  border-radius: 50%;
-  background: rgba(3,8,15,0.55);
-  color: #e5eaf2;
-  font-size: 19px;
-  cursor: pointer;
-  backdrop-filter: blur(8px);
-  transition: .3s ease;
-}
-
-.play-button:hover {
-  background: rgba(160,185,215,0.14);
-  transform: scale(1.06);
-}
-
-.play-button:active {
-  transform: scale(.94);
-}
-
-/* THOUGHTS */
-
-.thoughts {
-  max-width: 760px;
-  margin: 65px auto 0;
-  padding: 30px 25px;
-  border-top: 1px solid var(--border);
-  text-align: center;
-  animation: fadeIn 1.5s ease both;
-  animation-delay: .6s;
-}
-
-.typing-text {
-  min-height: 48px;
-  font-family: 'Cormorant Garamond', serif;
-  font-size: clamp(23px, 3vw, 31px);
-  font-style: italic;
-  font-weight: 400;
-  line-height: 1.5;
-  color: #c0c9d6;
-  text-shadow: 0 0 25px rgba(155,185,220,0.12);
-  overflow-wrap: anywhere;
-}
-
-.typing-text::after {
-  content: "|";
-  margin-left: 4px;
-  color: #9baec5;
-  animation: blink 1s infinite;
-}
-
-@keyframes blink {
-  50% { opacity: 0; }
-}
-
-/* ANIMATION */
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(15px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-/* RAIN CANVAS */
-
-#rain {
-  position: fixed;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  display: block;
-  pointer-events: none;
-  z-index: 5;
-  opacity: 1;
-}
-
-/* LENS WATER DROPS */
-
-#lensDrops {
-  position: fixed;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  z-index: 6;
-}
-
-/* MOBILE */
-
-@media (max-width: 700px) {
-  header { padding: 23px 20px; }
-  main { padding: 65px 20px 20px; }
-
-  .play-button {
-    width: 53px;
-    height: 53px;
-  }
-
-  .thoughts {
-    margin: 45px 20px 0;
-    padding: 25px 5px;
-  }
-
-  .typing-text { font-size: 25px; }
-
-  #fog {
-    opacity: 0.19;
-    filter: blur(38px);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  #fog, #filmGrain {
-    animation-duration: 60s;
-  }
-}
-</style>
-</head>
-
-<body>
-
-<div id="moonlight"></div>
-<div id="fog"></div>
-<div id="filmGrain"></div>
-<div id="stormGlow"></div>
-
-<div class="page">
-
-  <header>
-    <div class="logo">ᕙ⁠(⁠⇀⁠‸⁠↼⁠‶⁠)⁠ᕗ</div>
-  </header>
-
-  <main>
-    <section class="hero">
-      <div class="video-section">
-        <div class="video-container">
-
-          <video id="player" loop playsinline preload="auto">
-            <source src="lv_0_20261119012336.mp4" type="video/mp4">
-          </video>
-
-          <div class="play-overlay" id="playOverlay">
-            <button class="play-button" id="playButton" aria-label="Play video">▶</button>
-          </div>
-
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <section class="thoughts">
-    <div class="typing-text" id="typingText"></div>
-  </section>
-
-</div>
-
-<canvas id="magicParticles"></canvas>
+<!DOCTYPE html>  <html lang="en">  
+<head>  
+<meta charset="UTF-8">  
+<meta name="viewport" content="width=device-width, initial-scale=1.0">  <title>ᕙ⁠(⁠⇀⁠‸⁠↼⁠‶⁠)⁠ᕗ</title>  <link rel="preconnect" href="https://fonts.googleapis.com">  
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>  
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600&family=Cormorant+Garamond:ital,wght@0,400;1,400&display=swap" rel="stylesheet">  <style>  
+* { box-sizing: border-box; }  
+  
+:root {  
+  --text: #d5d9e1;  
+  --muted: #858d9b;  
+  --border: rgba(190,205,225,0.09);  
+}  
+  
+html {  
+  min-height: 100%;  
+  background: #000;  
+  scroll-behavior: smooth;  
+}  
+  
+body {  
+  margin: 0;  
+  min-height: 100vh;  
+  color: var(--text);  
+  font-family: 'Manrope', sans-serif;  
+  overflow-x: hidden;  
+  background: #000;  
+}  
+  
+/* DARK ATMOSPHERE */  
+  
+body::before {  
+  content: "";  
+  position: fixed;  
+  inset: 0;  
+  pointer-events: none;  
+  z-index: 1;  
+  background:  
+    radial-gradient(ellipse at center, transparent 20%, rgba(0,0,0,0.3) 75%, rgba(0,0,0,0.75) 120%),  
+    linear-gradient(180deg, rgba(0,0,0,0.08), rgba(0,0,0,0.35));  
+}  
+  
+/* MOONLIGHT */  
+  
+#moonlight {  
+  position: fixed;  
+  inset: 0;  
+  z-index: 1;  
+  pointer-events: none;  
+  background:  
+    radial-gradient(ellipse at 50% -15%,  
+      rgba(150,165,195,0.105) 0%,  
+      rgba(95,110,145,0.035) 30%,  
+      transparent 62%);  
+  opacity: 0.8;  
+}  
+  
+/* FOG */  
+  
+#fog {  
+  position: fixed;  
+  inset: -25%;  
+  z-index: 2;  
+  pointer-events: none;  
+  overflow: hidden;  
+  opacity: 0.24;  
+  background:  
+    radial-gradient(ellipse at 20% 55%, rgba(150,160,180,0.14) 0%, transparent 42%),  
+    radial-gradient(ellipse at 75% 35%, rgba(115,130,155,0.12) 0%, transparent 38%),  
+    radial-gradient(ellipse at 50% 85%, rgba(130,140,160,0.10) 0%, transparent 45%);  
+  filter: blur(55px);  
+  animation: fogDrift 32s ease-in-out infinite alternate;  
+}  
+  
+@keyframes fogDrift {  
+  0% { transform: translate3d(-4%, 2%, 0) scale(1); }  
+  50% { transform: translate3d(3%, -2%, 0) scale(1.08); }  
+  100% { transform: translate3d(5%, 3%, 0) scale(1.03); }  
+}  
+  
+/* LIGHTNING ATMOSPHERE */  
+  
+#stormGlow {  
+  position: fixed;  
+  inset: 0;  
+  z-index: 3;  
+  pointer-events: none;  
+  opacity: 0;  
+  background:  
+    radial-gradient(ellipse at 50% 25%,  
+      rgba(205,220,255,0.13),  
+      transparent 75%),  
+    rgba(180,205,245,0.08);  
+  transition: opacity 0.035s linear;  
+}  
+  
+/* FILM GRAIN */  
+  
+#filmGrain {  
+  position: fixed;  
+  inset: -50%;  
+  width: 200%;  
+  height: 200%;  
+  pointer-events: none;  
+  z-index: 2;  
+  opacity: 0.045;  
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.55'/%3E%3C/svg%3E");  
+  animation: grainMove .3s steps(2) infinite;  
+}  
+  
+@keyframes grainMove {  
+  0% { transform: translate(0,0); }  
+  25% { transform: translate(-1%,1%); }  
+  50% { transform: translate(1%,-1%); }  
+  75% { transform: translate(-1%,-1%); }  
+  100% { transform: translate(1%,1%); }  
+}  
+  
+/* MAGIC PARTICLES */  
+  
+#magicParticles {  
+  position: fixed;  
+  inset: 0;  
+  width: 100%;  
+  height: 100%;  
+  z-index: 3;  
+  pointer-events: none;  
+}  
+  
+/* MAIN CONTENT */  
+  
+.page {  
+  position: relative;  
+  z-index: 4;  
+}  
+  
+/* HEADER */  
+  
+header {  
+  max-width: 1100px;  
+  margin: auto;  
+  padding: 27px 35px;  
+  display: flex;  
+  justify-content: center;  
+  align-items: center;  
+  border-bottom: 1px solid var(--border);  
+}  
+  
+.logo {  
+  color: #dfe4ec;  
+  font-size: 17px;  
+  font-weight: 500;  
+  letter-spacing: 9px;  
+  padding-left: 9px;  
+}  
+  
+/* VIDEO AREA */  
+  
+main {  
+  max-width: 850px;  
+  margin: auto;  
+  padding: 75px 30px 20px;  
+}  
+  
+.hero {  
+  display: block;  
+  width: 100%;  
+}  
+  
+.video-section {  
+  width: 100%;  
+  animation: fadeIn 1.8s ease both;  
+}  
+  
+.video-container {  
+  position: relative;  
+  width: 100%;  
+  overflow: hidden;  
+  background: #000;  
+  border: 1px solid rgba(190,210,235,0.12);  
+  box-shadow:  
+    0 25px 85px rgba(0,0,0,0.8),  
+    0 0 45px rgba(100,135,175,0.06);  
+}  
+  
+video {  
+  display: block;  
+  width: 100%;  
+  height: auto;  
+  background: #000;  
+}  
+  
+/* PLAY BUTTON */  
+  
+.play-overlay {  
+  position: absolute;  
+  inset: 0;  
+  display: flex;  
+  justify-content: center;  
+  align-items: center;  
+  background: rgba(0,0,0,0.2);  
+  transition: opacity .4s ease, visibility .4s ease;  
+}  
+  
+.play-overlay.hidden {  
+  opacity: 0;  
+  visibility: hidden;  
+  pointer-events: none;  
+}  
+  
+.play-button {  
+  width: 60px;  
+  height: 60px;  
+  display: flex;  
+  justify-content: center;  
+  align-items: center;  
+  padding-left: 4px;  
+  border: 1px solid rgba(220,230,245,0.5);  
+  border-radius: 50%;  
+  background: rgba(3,8,15,0.55);  
+  color: #e5eaf2;  
+  font-size: 19px;  
+  cursor: pointer;  
+  backdrop-filter: blur(8px);  
+  transition: .3s ease;  
+}  
+  
+.play-button:hover {  
+  background: rgba(160,185,215,0.14);  
+  transform: scale(1.06);  
+}  
+  
+.play-button:active {  
+  transform: scale(.94);  
+}  
+  
+/* THOUGHTS */  
+  
+.thoughts {  
+  max-width: 760px;  
+  margin: 65px auto 0;  
+  padding: 30px 25px;  
+  border-top: 1px solid var(--border);  
+  text-align: center;  
+  animation: fadeIn 1.5s ease both;  
+  animation-delay: .6s;  
+}  
+  
+.typing-text {  
+  min-height: 48px;  
+  font-family: 'Cormorant Garamond', serif;  
+  font-size: clamp(23px, 3vw, 31px);  
+  font-style: italic;  
+  font-weight: 400;  
+  line-height: 1.5;  
+  color: #c0c9d6;  
+  text-shadow: 0 0 25px rgba(155,185,220,0.12);  
+  overflow-wrap: anywhere;  
+}  
+  
+.typing-text::after {  
+  content: "|";  
+  margin-left: 4px;  
+  color: #9baec5;  
+  animation: blink 1s infinite;  
+}  
+  
+@keyframes blink {  
+  50% { opacity: 0; }  
+}  
+  
+/* ANIMATION */  
+  
+@keyframes fadeIn {  
+  from { opacity: 0; transform: translateY(15px); }  
+  to { opacity: 1; transform: translateY(0); }  
+}  
+  
+/* RAIN CANVAS */  
+  
+#rain {  
+  position: fixed;  
+  inset: 0;  
+  width: 100%;  
+  height: 100%;  
+  display: block;  
+  pointer-events: none;  
+  z-index: 5;  
+  opacity: 1;  
+}  
+  
+/* MOBILE */  
+  
+@media (max-width: 700px) {  
+  header { padding: 23px 20px; }  
+  main { padding: 65px 20px 20px; }  
+  
+  .play-button {  
+    width: 53px;  
+    height: 53px;  
+  }  
+  
+  .thoughts {  
+    margin: 45px 20px 0;  
+    padding: 25px 5px;  
+  }  
+  
+  .typing-text { font-size: 25px; }  
+  
+  #fog {  
+    opacity: 0.19;  
+    filter: blur(38px);  
+  }  
+}  
+  
+@media (prefers-reduced-motion: reduce) {  
+  #fog, #filmGrain {  
+    animation-duration: 60s;  
+  }  
+}  
+</style>  </head>  <body>  <div id="moonlight"></div>  
+<div id="fog"></div>  
+<div id="filmGrain"></div>  
+<div id="stormGlow"></div>  <div class="page">    <header>  
+    <div class="logo">ᕙ⁠(⁠⇀⁠‸⁠↼⁠‶⁠)⁠ᕗ</div>  
+  </header>    <main>  
+    <section class="hero">  
+      <div class="video-section">  
+        <div class="video-container">  <video id="player" loop playsinline preload="auto">  
+        <source src="lv_0_20261119012336.mp4" type="video/mp4">  
+      </video>  
+
+      <div class="play-overlay" id="playOverlay">  
+        <button class="play-button" id="playButton" aria-label="Play video">▶</button>  
+      </div>  
+
+    </div>  
+  </div>  
+</section>
+
+  </main>    <section class="thoughts">  
+    <div class="typing-text" id="typingText"></div>  
+  </section>  </div>  <canvas id="magicParticles"></canvas>
 <canvas id="rain"></canvas>
-<canvas id="lensDrops"></canvas>
 
-<script>
-
-/* VIDEO */
-
-const player = document.getElementById("player");
-const playButton = document.getElementById("playButton");
-const playOverlay = document.getElementById("playOverlay");
-const videoContainer = document.querySelector(".video-container");
-
-player.muted = false;
-player.volume = 1;
-player.controls = false;
-
-function updatePlayButton() {
-  if (player.paused || player.ended) {
-    playOverlay.classList.remove("hidden");
-    playButton.textContent = "▶";
-  } else {
-    playOverlay.classList.add("hidden");
-    playButton.textContent = "Ⅱ";
-  }
-}
-
-playButton.addEventListener("click", () => {
-  if (player.paused) {
-    player.muted = false;
-    player.play().catch(error => {
-      console.log("Video playback failed:", error);
-      playOverlay.classList.remove("hidden");
-    });
-  } else {
-    player.pause();
-  }
-});
-
-player.addEventListener("play", updatePlayButton);
-player.addEventListener("pause", updatePlayButton);
-player.addEventListener("ended", updatePlayButton);
-
-
-/* TYPEWRITER */
-
-const typingText = document.getElementById("typingText");
-
-const messages = [
-  "I saw the way you looked at them… and understood my place.",
-  "You chose them. I chose silence.",
-  "I waited for a door that never opened.",
-  "goodbye.",
-];
-
-let messageIndex = 0;
-let charIndex = 0;
-let deleting = false;
-
-const typingSpeed = 120;
-const deletingSpeed = 45;
-const pauseAfterTyping = 2800;
-const pauseAfterDeleting = 700;
-
-function typeMessage() {
-  const currentMessage = messages[messageIndex];
-
-  if (!deleting) {
-    typingText.textContent = currentMessage.substring(0, charIndex + 1);
-    charIndex++;
-
-    if (charIndex === currentMessage.length) {
-      deleting = true;
-      setTimeout(typeMessage, pauseAfterTyping);
-    } else {
-      setTimeout(typeMessage, typingSpeed);
-    }
-  } else {
-    typingText.textContent = currentMessage.substring(0, charIndex - 1);
-    charIndex--;
-
-    if (charIndex === 0) {
-      deleting = false;
-      messageIndex = (messageIndex + 1) % messages.length;
-      setTimeout(typeMessage, pauseAfterDeleting);
-    } else {
-      setTimeout(typeMessage, deletingSpeed);
-    }
-  }
-}
-
-typeMessage();
-
-
-/* SHARED HELPERS */
-
-const random = (min, max) =>
-  Math.random() * (max - min) + min;
-
-
-/* RAIN */
-
-const canvas = document.getElementById("rain");
-const ctx = canvas.getContext("2d");
-const stormGlow = document.getElementById("stormGlow");
-
-let width = 0;
-let height = 0;
-let drops = [];
-let wind = -0.8;
-
-let lastFrame = 0;
-
-function createDrop(initial = false) {
-  const depth = Math.random();
-
-  return {
-    x: random(-20, width + 20),
-    y: initial ? random(-20, height) : random(-80, -10),
-    length: random(9, 17) + depth * 17,
-    speed: random(4, 7) + depth * 4,
-    thickness: 0.45 + depth * 0.85,
-    opacity: 0.13 + depth * 0.3,
-    drift: random(0.7, 1.6) + depth * 0.7
-  };
-}
-
-function resizeRain() {
-  const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
-
-  width = window.innerWidth;
-  height = window.innerHeight;
-
-  canvas.width = Math.floor(width * dpr);
-  canvas.height = Math.floor(height * dpr);
-  canvas.style.width = width + "px";
-  canvas.style.height = height + "px";
-
-  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-
-  const count = Math.min(260, Math.max(110, Math.floor(width * height / 2600)));
-
-  drops = Array.from({ length: count }, () => createDrop(true));
-}
-
-
-/* REALISTIC LIGHTNING SYSTEM */
-
-let lightningBolts = [];
-let lightningFlash = 0;
-let nextLightning = 0;
-let lightningActive = false;
-
-let flashSequence = [];
-let flashIndex = 0;
-let flashTimer = 0;
-let flashWait = 0;
-let currentFlashStrength = 0;
-
-/* ORGANIC LIGHTNING BRANCH */
-
-function createBolt(x, y, length, spread, depth = 0, direction = 1) {
-  const points = [{ x, y }];
-
-  let currentX = x;
-  let currentY = y;
-
-  const segments = Math.floor(random(13, 23));
-  const segmentLength = length / segments;
-
-  let currentDirection = direction;
-
-  for (let i = 0; i < segments; i++) {
-    currentDirection += random(-0.55, 0.55);
-    currentDirection = Math.max(-1.1, Math.min(1.1, currentDirection));
-
-    currentX += currentDirection * spread * 0.18 + random(-spread * 0.22, spread * 0.22);
-    currentY += segmentLength * random(0.75, 1.25);
-
-    points.push({ x: currentX, y: currentY });
-  }
-
-  const branches = [];
-
-  if (depth < 3) {
-    for (let i = 3; i < points.length - 2; i++) {
-      if (Math.random() < (depth === 0 ? 0.16 : 0.09)) {
-        const point = points[i];
-        const branchDirection = Math.random() > 0.5 ? 1 : -1;
-
-        branches.push(
-          createBolt(
-            point.x,
-            point.y,
-            length * random(0.12, 0.32),
-            spread * random(0.35, 0.7),
-            depth + 1,
-            branchDirection * random(0.5, 1.2)
-          )
-        );
-      }
-    }
-  }
-
-  return { points, branches };
-}
-
-
-/* DRAW LIGHTNING */
-
-function drawBolt(bolt, alpha, main = false) {
-  if (alpha <= 0) return;
-
-  ctx.beginPath();
-  ctx.moveTo(bolt.points[0].x, bolt.points[0].y);
-
-  for (let i = 1; i < bolt.points.length; i++) {
-    const point = bolt.points[i];
-    ctx.lineTo(point.x, point.y);
-  }
-
-  ctx.strokeStyle = `rgba(155,190,245,${alpha * 0.22})`;
-  ctx.lineWidth = main ? 9 : 4;
-  ctx.lineCap = "round";
-  ctx.lineJoin = "round";
-  ctx.shadowBlur = main ? 34 : 18;
-  ctx.shadowColor = "rgba(145,185,255,0.9)";
-  ctx.stroke();
-
-  ctx.beginPath();
-  ctx.moveTo(bolt.points[0].x, bolt.points[0].y);
-
-  for (let i = 1; i < bolt.points.length; i++) {
-    ctx.lineTo(bolt.points[i].x, bolt.points[i].y);
-  }
-
-  ctx.strokeStyle = `rgba(235,243,255,${alpha})`;
-  ctx.lineWidth = main ? 1.8 : 0.75;
-  ctx.shadowBlur = main ? 15 : 8;
-  ctx.shadowColor = "rgba(210,230,255,1)";
-  ctx.stroke();
-
-  bolt.branches.forEach(branch => {
-    drawBolt(branch, alpha * 0.55, false);
-  });
-}
-
-
-/* RANDOM FLASH SEQUENCE */
-
-function createFlashSequence() {
-  const flashes = [];
-
-  const count = Math.random() > 0.58 ? 3 : 2;
-
-  for (let i = 0; i < count; i++) {
-    flashes.push({
-      strength: random(0.1, 0.23) * (i === 0 ? 1 : random(0.45, 0.85)),
-      duration: random(35, 85),
-      gap: i === 0 ? 0 : random(55, 145)
-    });
-  }
-
-  return flashes;
-}
-
-
-/* START STORM EVENT */
-
-function startLightning() {
-  lightningActive = true;
-
-  lightningBolts = [];
-
-  const distant = Math.random() > 0.72;
-
-  if (!distant) {
-    const x = random(width * 0.12, width * 0.88);
-
-    lightningBolts.push(
-      createBolt(
-        x,
-        random(-30, 15),
-        height * random(0.48, 0.95),
-        random(35, 85)
-      )
-    );
-
-    if (Math.random() > 0.7) {
-      lightningBolts.push(
-        createBolt(
-          random(width * 0.1, width * 0.9),
-          random(-20, 10),
-          height * random(0.2, 0.48),
-          random(25, 55)
-        )
-      );
-    }
-  } else {
-    lightningBolts = [];
-  }
-
-  flashSequence = createFlashSequence();
-  flashIndex = 0;
-  flashTimer = 0;
-  flashWait = 0;
-  currentFlashStrength = 0;
-}
-
-
-/* UPDATE STORM + VIDEO REFLECTION */
-
-function updateLightning(delta) {
-  const now = Date.now();
-
-  if (!lightningActive && now >= nextLightning) {
-    startLightning();
-  }
-
-  if (lightningActive) {
-    if (flashIndex < flashSequence.length) {
-      const flash = flashSequence[flashIndex];
-
-      if (flashWait > 0) {
-        flashWait -= delta;
-        currentFlashStrength = 0;
-      } else {
-        flashTimer += delta;
-
-        if (flashTimer <= flash.duration) {
-          const progress = flashTimer / flash.duration;
-
-          const fade = progress < 0.18
-            ? progress / 0.18
-            : 1 - ((progress - 0.18) / 0.82);
-
-          currentFlashStrength = Math.max(0, fade * flash.strength);
-        } else {
-          currentFlashStrength = 0;
-          flashTimer = 0;
-          flashWait = flash.gap;
-          flashIndex++;
-        }
-      }
-    } else {
-      currentFlashStrength = 0;
-      lightningActive = false;
-      lightningBolts = [];
-
-      nextLightning = now + random(7500, 24000);
-    }
-  }
-
-  lightningFlash = currentFlashStrength;
-
-  stormGlow.style.opacity = lightningFlash;
-
-  /* Reflect lightning on video */
-
-  const reflection = Math.min(1, lightningFlash * 2.8);
-
-  videoContainer.style.setProperty(
-    "--reflection-strength",
-    reflection
-  );
-
-  videoContainer.classList.toggle(
-    "lightning-reflection",
-    reflection > 0.01
-  );
-}
-
-
-/* MAGIC PARTICLES */
-
-const magicCanvas = document.getElementById("magicParticles");
-const magicCtx = magicCanvas.getContext("2d");
-
-let particles = [];
-
-function createParticle(initial = false) {
-  return {
-    x: random(0, width),
-    y: initial ? random(0, height) : height + random(5, 40),
-    radius: random(0.5, 1.5),
-    speedY: random(0.12, 0.42),
-    speedX: random(-0.16, 0.16),
-    opacity: random(0.15, 0.65),
-    phase: random(0, Math.PI * 2),
-    twinkleSpeed: random(0.008, 0.025)
-  };
-}
-
-function resizeMagic() {
-  const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
-
-  magicCanvas.width = Math.floor(width * dpr);
-  magicCanvas.height = Math.floor(height * dpr);
-  magicCanvas.style.width = width + "px";
-  magicCanvas.style.height = height + "px";
-
-  magicCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
-
-  const count = Math.min(42, Math.max(18, Math.floor(width * height / 24000)));
-
-  particles = Array.from({ length: count }, () => createParticle(true));
-}
-
-function drawMagicParticles(delta) {
-  magicCtx.clearRect(0, 0, width, height);
-
-  const frameScale = delta / 16.67;
-
-  particles.forEach(particle => {
-    particle.phase += particle.twinkleSpeed * frameScale;
-    particle.x += particle.speedX * frameScale;
-    particle.y -= particle.speedY * frameScale;
-
-    const twinkle = 0.35 + Math.sin(particle.phase) * 0.35;
-    const alpha = Math.max(0, particle.opacity * twinkle);
-
-    magicCtx.beginPath();
-    magicCtx.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2);
-
-    magicCtx.fillStyle = `rgba(205,220,245,${alpha})`;
-    magicCtx.shadowBlur = 9;
-    magicCtx.shadowColor = "rgba(175,200,235,0.65)";
-    magicCtx.fill();
-
-    if (particle.radius > 1.1) {
-      magicCtx.beginPath();
-      magicCtx.arc(particle.x, particle.y, particle.radius * 2.8, 0, Math.PI * 2);
-      magicCtx.fillStyle = `rgba(180,200,230,${alpha * 0.12})`;
-      magicCtx.fill();
-    }
-
-    if (
-      particle.y < -20 ||
-      particle.x < -20 ||
-      particle.x > width + 20
-    ) {
-      Object.assign(particle, createParticle());
-      particle.y = height + random(5, 40);
-    }
-  });
-
-  magicCtx.shadowBlur = 0;
-}
-
-
-/* REALISTIC LENS WATER DROPS */
-
-const lensCanvas = document.getElementById("lensDrops");
-const lensCtx = lensCanvas.getContext("2d");
-
-let lensDrops = [];
-
-function createLensDrop(initial = false) {
-  const radius = random(2, 7);
-
-  return {
-    x: random(0, width),
-    y: initial ? random(0, height) : random(-30, -5),
-    radius,
-    speed: random(0.08, 0.28),
-    drift: random(-0.12, 0.12),
-    opacity: random(0.08, 0.2),
-    wobble: random(0, Math.PI * 2)
-  };
-}
-
-function resizeLensDrops() {
-  const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
-
-  lensCanvas.width = Math.floor(width * dpr);
-  lensCanvas.height = Math.floor(height * dpr);
-
-  lensCanvas.style.width = width + "px";
-  lensCanvas.style.height = height + "px";
-
-  lensCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
-
-  const count = Math.min(24, Meting = false;
-
-const typingSpeed = 120;
-const deletingSpeed = 45;
-const pauseAfterTyping = 2800;
-const pauseAfterDeleting = 700;
-
-function typeMessage() {
-  const currentMessage = messages[messageIndex];
-
-  /* Special glow for the final message */
-
-  typingText.classList.toggle(
-    "final-message",
-    messageIndex === messages.length - 1
-  );
-
-  if (!deleting) {
-    typingText.textContent = currentMessage.substring(0, charIndex + 1);
-    charIndex++;
-
-    if (charIndex === currentMessage.length) {
-      deleting = true;
-      setTimeout(typeMessage, pauseAfterTyping);
-    } else {
-      setTimeout(typeMessage, typingSpeed);
-    }
-  } else {
-    typingText.textContent = currentMessage.substring(0, charIndex - 1);
-    charIndex--;
-
-    if (charIndex === 0) {
-      deleting = false;
-      messageIndex = (messageIndex + 1) % messages.length;
-      setTimeout(typeMessage, pauseAfterDeleting);
-    } else {
-      setTimeout(typeMessage, deletingSpeed);
-    }
-  }
-}
-
-typeMessage();
-
-
-/* SHARED HELPERS */
-
-const random = (min, max) =>
-  Math.random() * (max - min) + min;
-
-
-/* RAIN */
-
-const canvas = document.getElementById("rain");
-const ctx = canvas.getContext("2d");
-const stormGlow = document.getElementById("stormGlow");
-
-let width = 0;
-let height = 0;
-let drops = [];
-let wind = -0.8;
-
-let lastFrame = 0;
-
-function createDrop(initial = false) {
-  const depth = Math.random();
-
-  return {
-    x: random(-20, width + 20),
-    y: initial ? random(-20, height) : random(-80, -10),
-    length: random(9, 17) + depth * 17,
-    speed: random(4, 7) + depth * 4,
-    thickness: 0.45 + depth * 0.85,
-    opacity: 0.13 + depth * 0.3,
-    drift: random(0.7, 1.6) + depth * 0.7
-  };
-}
-
-function resizeRain() {
-  const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
-
-  width = window.innerWidth;
-  height = window.innerHeight;
-
-  canvas.width = Math.floor(width * dpr);
-  canvas.height = Math.floor(height * dpr);
-  canvas.style.width = width + "px";
-  canvas.style.height = height + "px";
-
-  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-
-  const count = Math.min(260, Math.max(110, Math.floor(width * height / 2600)));
-
-  drops = Array.from({ length: count }, () => createDrop(true));
-}
-
-
-/* REALISTIC LIGHTNING SYSTEM */
-
-let lightningBolts = [];
-let lightningFlash = 0;
-let nextLightning = 0;
-let lightningActive = false;
-
-let flashSequence = [];
-let flashIndex = 0;
-let flashTimer = 0;
-let flashWait = 0;
-let currentFlashStrength = 0;
-
-/* Organic lightning branch */
-
-function createBolt(x, y, length, spread, depth = 0, direction = 1) {
-  const points = [{ x, y }];
-
-  let currentX = x;
-  let currentY = y;
-
-  const segments = Math.floor(random(13, 23));
-  const segmentLength = length / segments;
-
-  let currentDirection = direction;
-
-  for (let i = 0; i < segments; i++) {
-    currentDirection += random(-0.55, 0.55);
-    currentDirection = Math.max(-1.1, Math.min(1.1, currentDirection));
-
-    currentX += currentDirection * spread * 0.18 + random(-spread * 0.22, spread * 0.22);
-    currentY += segmentLength * random(0.75, 1.25);
-
-    points.push({ x: currentX, y: currentY });
-  }
-
-  const branches = [];
-
-  if (depth < 3) {
-    for (let i = 3; i < points.length - 2; i++) {
-      if (Math.random() < (depth === 0 ? 0.16 : 0.09)) {
-        const point = points[i];
-        const branchDirection = Math.random() > 0.5 ? 1 : -1;
-
-        branches.push(
-          createBolt(
-            point.x,
-            point.y,
-            length * random(0.12, 0.32),
-            spread * random(0.35, 0.7),
-            depth + 1,
-            branchDirection * random(0.5, 1.2)
-          )
-        );
-      }
-    }
-  }
-
-  return { points, branches };
-}
-
-
-/* DRAW LIGHTNING */
-
-function drawBolt(bolt, alpha, main = false) {
-  if (alpha <= 0) return;
-
-  ctx.beginPath();
-  ctx.moveTo(bolt.points[0].x, bolt.points[0].y);
-
-  for (let i = 1; i < bolt.points.length; i++) {
-    const point = bolt.points[i];
-    ctx.lineTo(point.x, point.y);
-  }
-
-  ctx.strokeStyle = `rgba(155,190,245,${alpha * 0.22})`;
-  ctx.lineWidth = main ? 9 : 4;
-  ctx.lineCap = "round";
-  ctx.lineJoin = "round";
-  ctx.shadowBlur = main ? 34 : 18;
-  ctx.shadowColor = "rgba(145,185,255,0.9)";
-  ctx.stroke();
-
-  ctx.beginPath();
-  ctx.moveTo(bolt.points[0].x, bolt.points[0].y);
-
-  for (let i = 1; i < bolt.points.length; i++) {
-    ctx.lineTo(bolt.points[i].x, bolt.points[i].y);
-  }
-
-  ctx.strokeStyle = `rgba(235,243,255,${alpha})`;
-  ctx.lineWidth = main ? 1.8 : 0.75;
-  ctx.shadowBlur = main ? 15 : 8;
-  ctx.shadowColor = "rgba(210,230,255,1)";
-  ctx.stroke();
-
-  bolt.branches.forEach(branch => {
-    drawBolt(branch, alpha * 0.55, false);
-  });
-}
-
-
-/* RANDOM FLASH SEQUENCE */
-
-function createFlashSequence() {
-  const flashes = [];
-
-  const count = Math.random() > 0.58 ? 3 : 2;
-
-  for (let i = 0; i < count; i++) {
-    flashes.push({
-      strength: random(0.1, 0.23) * (i === 0 ? 1 : random(0.45, 0.85)),
-      duration: random(35, 85),
-      gap: i === 0 ? 0 : random(55, 145)
-    });
-  }
-
-  return flashes;
-}
-
-
-/* START STORM EVENT */
-
-function startLightning() {
-  lightningActive = true;
-
-  lightningBolts = [];
-
-  const distant = Math.random() > 0.72;
-
-  if (!distant) {
-    const x = random(width * 0.12, width * 0.88);
-
-    lightningBolts.push(
-      createBolt(
-        x,
-        random(-30, 15),
-        height * random(0.48, 0.95),
-        random(35, 85)
-      )
-    );
-
-    if (Math.random() > 0.7) {
-      lightningBolts.push(
-        createBolt(
-          random(width * 0.1, width * 0.9),
-          random(-20, 10),
-          height * random(0.2, 0.48),
-          random(25, 55)
-        )
-      );
-    }
-  } else {
-    lightningBolts = [];
-  }
-
-  flashSequence = createFlashSequence();
-  flashIndex = 0;
-  flashTimer = 0;
-  flashWait = 0;
-  currentFlashStrength = 0;
-}
-
-
-/* UPDATE STORM */
-
-function updateLightning(delta) {
-  const now = Date.now();
-
-  if (!lightningActive && now >= nextLightning) {
-    startLightning();
-  }
-
-  if (lightningActive) {
-    if (flashIndex < flashSequence.length) {
-      const flash = flashSequence[flashIndex];
-
-      if (flashWait > 0) {
-        flashWait -= delta;
-        currentFlashStrength = 0;
-      } else {
-        flashTimer += delta;
-
-        if (flashTimer <= flash.duration) {
-          const progress = flashTimer / flash.duration;
-
-          const fade = progress < 0.18
-            ? progress / 0.18
-            : 1 - ((progress - 0.18) / 0.82);
-
-          currentFlashStrength = Math.max(0, fade * flash.strength);
-        } else {
-          currentFlashStrength = 0;
-          flashTimer = 0;
-          flashWait = flash.gap;
-          flashIndex++;
-        }
-      }
-    } else {
-      currentFlashStrength = 0;
-      lightningActive = false;
-      lightningBolts = [];
-
-      nextLightning = now + random(7500, 24000);
-    }
-  }
-
-  lightningFlash = currentFlashStrength;
-
-  stormGlow.style.opacity = lightningFlash;
-
-  /* Synchronize text glow with lightning */
-
-  document.documentElement.style.setProperty(
-    "--storm-text-glow",
-    Math.min(1, lightningFlash * 4)
-  );
-}
-
-
-/* MAGIC PARTICLES */
-
-const magicCanvas = document.getElementById("magicParticles");
-const magicCtx = magicCanvas.getContext("2d");
-
-let particles = [];
-
-function createParticle(initial = false) {
-  return {
-    x: random(0, width),
-    y: initial ? random(0, height) : height + random(5, 40),
-    radius: random(0.5, 1.5),
-    speedY: random(0.12, 0.42),
-    speedX: random(-0.16, 0.16),
-    opacity: random(0.15, 0.65),
-    phase: random(0, Math.PI * 2),
-    twinkleSpeed: random(0.008, 0.025)
-  };
-}
-
-function resizeMagic() {
-  const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
-
-  magicCanvas.width = Math.floor(width * dpr);
-  magicCanvas.height = Math.floor(height * dpr);
-  magicCanvas.style.width = width + "px";
-  magicCanvas.style.height = height + "px";
-
-  magicCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
-
-  const count = Math.min(42, Math.max(18, Math.floor(width * height / 24000)));
-
-  particles = Array.from({ length: count }, () => createParticle(true));
-}
-
-function drawMagicParticles(delta) {
-  magicCtx.clearRect(0, 0, width, height);
-
-  const frameScale = delta / 16.67;
-
-  particles.forEach(particle => {
-    particle.phase += particle.twinkleSpeed * frameScale;
-    particle.x += particle.speedX * frameScale;
-    particle.y -= particle.speedY * frameScale;
-
-    const twinkle = 0.35 + Math.sin(particle.phase) * 0.35;
-    const alpha = Math.max(0, particle.opacity * twinkle);
-
-    magicCtx.beginPath();
-    magicCtx.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2);
-
-    magicCtx.fillStyle = `rgba(205,220,245,${alpha})`;
-    magicCtx.shadowBlur = 9;
-    magicCtx.shadowColor = "rgba(175,200,235,0.65)";
-    magicCtx.fill();
-
-    if (particle.radius > 1.1) {
-      magicCtx.beginPath();
-      magicCtx.arc(particle.x, particle.y, particle.radius * 2.8, 0, Math.PI * 2);
-      magicCtx.fillStyle = `rgba(180,200,230,${alpha * 0.12})`;
-      magicCtx.fill();
-    }
-
-    if (
-      particle.y < -20 ||
-      particle.x < -20 ||
-      particle.x > width + 20
-    ) {
-      Object.assign(particle, createParticle());
-      particle.y = height + random(5, 40);
-    }
-  });
-
-  magicCtx.shadowBlur = 0;
-}
-
-
-/* DRAW RAIN + LIGHTNING */
-
-function drawRain(timestamp = 0) {
-  const delta = lastFrame
-    ? Math.min(timestamp - lastFrame, 40)
-    : 16.67;
-
-  lastFrame = timestamp;
-
-  ctx.clearRect(0, 0, width, height);
-
-  wind += random(-0.006, 0.006);
-  wind = Math.max(-1.5, Math.min(-0.35, wind));
-
-  drops.forEach(drop => {
-    const dx = wind * drop.drift;
-
-    ctx.beginPath();
-    ctx.moveTo(drop.x, drop.y);
-    ctx.lineTo(drop.x + dx * 1.7, drop.y + drop.length);
-
-    ctx.strokeStyle = `rgba(195,215,238,${drop.opacity})`;
-    ctx.lineWidth = drop.thickness;
-    ctx.lineCap = "round";
-    ctx.stroke();
-
-    drop.x += dx * (delta / 16.67);
-    drop.y += drop.speed * (delta / 16.67);
-
-    if (
-      drop.y > height + drop.length ||
-      drop.x < -40 ||
-      drop.x > width + 40
-    ) {
-      Object.assign(drop, createDrop());
-    }
-  });
-
-  drawMagicParticles(delta);
-
-  updateLightning(delta);
-
-  if (lightningActive && lightningBolts.length && lightningFlash > 0.015) {
-    ctx.save();
-
-    lightningBolts.forEach((bolt, index) => {
-      drawBolt(
-        bolt,
-        Math.min(1, lightningFlash * (index === 0 ? 5 : 3)),
-        index === 0
-      );
-    });
-
-    ctx.restore();
-  }
-
-  requestAnimationFrame(drawRain);
-}
-
-
-/* INITIALIZE */
-
-function initializeEffects() {
-  resizeRain();
-  resizeMagic();
-
-  nextLightning = Date.now() + random(5000, 11000);
-
-  drawRain();
-}
-
-window.addEventListener("resize", () => {
-  resizeRain();
-  resizeMagic();
-});
-
-initializeEffects();
-
-</script>
-
-</body>
-</html>
+<script>  
+  
+/* VIDEO */  
+  
+const player = document.getElementById("player");  
+const playButton = document.getElementById("playButton");  
+const playOverlay = document.getElementById("playOverlay");  
+  
+player.muted = false;  
+player.volume = 1;  
+player.controls = false;  
+  
+function updatePlayButton() {  
+  if (player.paused || player.ended) {  
+    playOverlay.classList.remove("hidden");  
+    playButton.textContent = "▶";  
+  } else {  
+    playOverlay.classList.add("hidden");  
+    playButton.textContent = "Ⅱ";  
+  }  
+}  
+  
+playButton.addEventListener("click", () => {  
+  if (player.paused) {  
+    player.muted = false;  
+    player.play().catch(error => {  
+      console.log("Video playback failed:", error);  
+      playOverlay.classList.remove("hidden");  
+    });  
+  } else {  
+    player.pause();  
+  }  
+});  
+  
+player.addEventListener("play", updatePlayButton);  
+player.addEventListener("pause", updatePlayButton);  
+player.addEventListener("ended", updatePlayButton);  
+  
+  
+/* TYPEWRITER */  
+  
+const typingText = document.getElementById("typingText");  
+  
+const messages = [  
+  "I saw the way you looked at them… and understood my place.",  
+  "You chose them. I chose silence.",  
+  "I waited for a door that never opened.",  
+  "goodbye.",  
+];  
+  
+let messageIndex = 0;  
+let charIndex = 0;  
+let deleting = false;  
+  
+const typingSpeed = 120;  
+const deletingSpeed = 45;  
+const pauseAfterTyping = 2800;  
+const pauseAfterDeleting = 700;  
+  
+function typeMessage() {  
+  const currentMessage = messages[messageIndex];  
+  
+  if (!deleting) {  
+    typingText.textContent = currentMessage.substring(0, charIndex + 1);  
+    charIndex++;  
+  
+    if (charIndex === currentMessage.length) {  
+      deleting = true;  
+      setTimeout(typeMessage, pauseAfterTyping);  
+    } else {  
+      setTimeout(typeMessage, typingSpeed);  
+    }  
+  } else {  
+    typingText.textContent = currentMessage.substring(0, charIndex - 1);  
+    charIndex--;  
+  
+    if (charIndex === 0) {  
+      deleting = false;  
+      messageIndex = (messageIndex + 1) % messages.length;  
+      setTimeout(typeMessage, pauseAfterDeleting);  
+    } else {  
+      setTimeout(typeMessage, deletingSpeed);  
+    }  
+  }  
+}  
+  
+typeMessage();  
+  
+  
+/* SHARED HELPERS */  
+  
+const random = (min, max) =>  
+  Math.random() * (max - min) + min;  
+  
+  
+/* RAIN */  
+  
+const canvas = document.getElementById("rain");  
+const ctx = canvas.getContext("2d");  
+const stormGlow = document.getElementById("stormGlow");  
+  
+let width = 0;  
+let height = 0;  
+let drops = [];  
+let wind = -0.8;  
+  
+let lastFrame = 0;  
+  
+function createDrop(initial = false) {  
+  const depth = Math.random();  
+  
+  return {  
+    x: random(-20, width + 20),  
+    y: initial ? random(-20, height) : random(-80, -10),  
+    length: random(9, 17) + depth * 17,  
+  
+    /* Slightly slower rain */  
+    speed: random(4, 7) + depth * 4,  
+  
+    thickness: 0.45 + depth * 0.85,  
+    opacity: 0.13 + depth * 0.3,  
+    drift: random(0.7, 1.6) + depth * 0.7  
+  };  
+}  
+  
+function resizeRain() {  
+  const dpr = Math.min(window.devicePixelRatio || 1, 1.5);  
+  
+  width = window.innerWidth;  
+  height = window.innerHeight;  
+  
+  canvas.width = Math.floor(width * dpr);  
+  canvas.height = Math.floor(height * dpr);  
+  canvas.style.width = width + "px";  
+  canvas.style.height = height + "px";  
+  
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);  
+  
+  const count = Math.min(260, Math.max(110, Math.floor(width * height / 2600)));  
+  
+  drops = Array.from({ length: count }, () => createDrop(true));  
+}  
+  
+  
+/* REALISTIC LIGHTNING SYSTEM */  
+  
+let lightningBolts = [];  
+let lightningFlash = 0;  
+let nextLightning = 0;  
+let lightningActive = false;  
+  
+let flashSequence = [];  
+let flashIndex = 0;  
+let flashTimer = 0;  
+let flashWait = 0;  
+let currentFlashStrength = 0;  
+  
+/* Organic lightning branch */  
+  
+function createBolt(x, y, length, spread, depth = 0, direction = 1) {  
+  const points = [{ x, y }];  
+  
+  let currentX = x;  
+  let currentY = y;  
+  
+  const segments = Math.floor(random(13, 23));  
+  const segmentLength = length / segments;  
+  
+  let currentDirection = direction;  
+  
+  for (let i = 0; i < segments; i++) {  
+    currentDirection += random(-0.55, 0.55);  
+    currentDirection = Math.max(-1.1, Math.min(1.1, currentDirection));  
+  
+    currentX += currentDirection * spread * 0.18 + random(-spread * 0.22, spread * 0.22);  
+    currentY += segmentLength * random(0.75, 1.25);  
+  
+    points.push({ x: currentX, y: currentY });  
+  }  
+  
+  const branches = [];  
+  
+  if (depth < 3) {  
+    for (let i = 3; i < points.length - 2; i++) {  
+      if (Math.random() < (depth === 0 ? 0.16 : 0.09)) {  
+        const point = points[i];  
+        const branchDirection = Math.random() > 0.5 ? 1 : -1;  
+  
+        branches.push(  
+          createBolt(  
+            point.x,  
+            point.y,  
+            length * random(0.12, 0.32),  
+            spread * random(0.35, 0.7),  
+            depth + 1,  
+            branchDirection * random(0.5, 1.2)  
+          )  
+        );  
+      }  
+    }  
+  }  
+  
+  return { points, branches };  
+}  
+  
+  
+/* DRAW LIGHTNING */  
+  
+function drawBolt(bolt, alpha, main = false) {  
+  if (alpha <= 0) return;  
+  
+  ctx.beginPath();  
+  ctx.moveTo(bolt.points[0].x, bolt.points[0].y);  
+  
+  for (let i = 1; i < bolt.points.length; i++) {  
+    const point = bolt.points[i];  
+    ctx.lineTo(point.x, point.y);  
+  }  
+  
+  /* Soft atmospheric glow */  
+  
+  ctx.strokeStyle = `rgba(155,190,245,${alpha * 0.22})`;  
+  ctx.lineWidth = main ? 9 : 4;  
+  ctx.lineCap = "round";  
+  ctx.lineJoin = "round";  
+  ctx.shadowBlur = main ? 34 : 18;  
+  ctx.shadowColor = "rgba(145,185,255,0.9)";  
+  ctx.stroke();  
+  
+  /* Bright lightning core */  
+  
+  ctx.beginPath();  
+  ctx.moveTo(bolt.points[0].x, bolt.points[0].y);  
+  
+  for (let i = 1; i < bolt.points.length; i++) {  
+    ctx.lineTo(bolt.points[i].x, bolt.points[i].y);  
+  }  
+  
+  ctx.strokeStyle = `rgba(235,243,255,${alpha})`;  
+  ctx.lineWidth = main ? 1.8 : 0.75;  
+  ctx.shadowBlur = main ? 15 : 8;  
+  ctx.shadowColor = "rgba(210,230,255,1)";  
+  ctx.stroke();  
+  
+  bolt.branches.forEach(branch => {  
+    drawBolt(branch, alpha * 0.55, false);  
+  });  
+}  
+  
+  
+/* RANDOM FLASH SEQUENCE */  
+  
+function createFlashSequence() {  
+  const flashes = [];  
+  
+  const count = Math.random() > 0.58 ? 3 : 2;  
+  
+  for (let i = 0; i < count; i++) {  
+    flashes.push({  
+      strength: random(0.1, 0.23) * (i === 0 ? 1 : random(0.45, 0.85)),  
+      duration: random(35, 85),  
+      gap: i === 0 ? 0 : random(55, 145)  
+    });  
+  }  
+  
+  return flashes;  
+}  
+  
+  
+/* START STORM EVENT */  
+  
+function startLightning() {  
+  lightningActive = true;  
+  
+  lightningBolts = [];  
+  
+  const distant = Math.random() > 0.72;  
+  
+  if (!distant) {  
+    const x = random(width * 0.12, width * 0.88);  
+  
+    lightningBolts.push(  
+      createBolt(  
+        x,  
+        random(-30, 15),  
+        height * random(0.48, 0.95),  
+        random(35, 85)  
+      )  
+    );  
+  
+    /* Occasional secondary bolt */  
+  
+    if (Math.random() > 0.7) {  
+      lightningBolts.push(  
+        createBolt(  
+          random(width * 0.1, width * 0.9),  
+          random(-20, 10),  
+          height * random(0.2, 0.48),  
+          random(25, 55)  
+        )  
+      );  
+    }  
+  } else {  
+    /* Distant lightning: sky illuminates without a visible bolt */  
+    lightningBolts = [];  
+  }  
+  
+  flashSequence = createFlashSequence();  
+  flashIndex = 0;  
+  flashTimer = 0;  
+  flashWait = 0;  
+  currentFlashStrength = 0;  
+}  
+  
+  
+/* UPDATE STORM */  
+  
+function updateLightning(delta) {  
+  const now = Date.now();  
+  
+  if (!lightningActive && now >= nextLightning) {  
+    startLightning();  
+  }  
+  
+  if (lightningActive) {  
+    if (flashIndex < flashSequence.length) {  
+      const flash = flashSequence[flashIndex];  
+  
+      if (flashWait > 0) {  
+        flashWait -= delta;  
+        currentFlashStrength = 0;  
+      } else {  
+        flashTimer += delta;  
+  
+        if (flashTimer <= flash.duration) {  
+          const progress = flashTimer / flash.duration;  
+  
+          /* Fast attack, softer fade */  
+  
+          const fade = progress < 0.18  
+            ? progress / 0.18  
+            : 1 - ((progress - 0.18) / 0.82);  
+  
+          currentFlashStrength = Math.max(0, fade * flash.strength);  
+        } else {  
+          currentFlashStrength = 0;  
+          flashTimer = 0;  
+          flashWait = flash.gap;  
+          flashIndex++;  
+        }  
+      }  
+    } else {  
+      currentFlashStrength = 0;  
+      lightningActive = false;  
+      lightningBolts = [];  
+  
+      nextLightning = now + random(7500, 24000);  
+    }  
+  }  
+  
+  lightningFlash = currentFlashStrength;  
+  
+  stormGlow.style.opacity = lightningFlash;  
+}  
+  
+  
+/* MAGIC PARTICLES */  
+  
+const magicCanvas = document.getElementById("magicParticles");  
+const magicCtx = magicCanvas.getContext("2d");  
+  
+let particles = [];  
+  
+function createParticle(initial = false) {  
+  return {  
+    x: random(0, width),  
+    y: initial ? random(0, height) : height + random(5, 40),  
+    radius: random(0.5, 1.5),  
+    speedY: random(0.12, 0.42),  
+    speedX: random(-0.16, 0.16),  
+    opacity: random(0.15, 0.65),  
+    phase: random(0, Math.PI * 2),  
+    twinkleSpeed: random(0.008, 0.025)  
+  };  
+}  
+  
+function resizeMagic() {  
+  const dpr = Math.min(window.devicePixelRatio || 1, 1.5);  
+  
+  magicCanvas.width = Math.floor(width * dpr);  
+  magicCanvas.height = Math.floor(height * dpr);  
+  magicCanvas.style.width = width + "px";  
+  magicCanvas.style.height = height + "px";  
+  
+  magicCtx.setTransform(dpr, 0, 0, dpr, 0, 0);  
+  
+  const count = Math.min(42, Math.max(18, Math.floor(width * height / 24000)));  
+  
+  particles = Array.from({ length: count }, () => createParticle(true));  
+}  
+  
+function drawMagicParticles(delta) {  
+  magicCtx.clearRect(0, 0, width, height);  
+  
+  const frameScale = delta / 16.67;  
+  
+  particles.forEach(particle => {  
+    particle.phase += particle.twinkleSpeed * frameScale;  
+    particle.x += particle.speedX * frameScale;  
+    particle.y -= particle.speedY * frameScale;  
+  
+    const twinkle = 0.35 + Math.sin(particle.phase) * 0.35;  
+    const alpha = Math.max(0, particle.opacity * twinkle);  
+  
+    magicCtx.beginPath();  
+    magicCtx.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2);  
+  
+    magicCtx.fillStyle = `rgba(205,220,245,${alpha})`;  
+    magicCtx.shadowBlur = 9;  
+    magicCtx.shadowColor = "rgba(175,200,235,0.65)";  
+    magicCtx.fill();  
+  
+    if (particle.radius > 1.1) {  
+      magicCtx.beginPath();  
+      magicCtx.arc(particle.x, particle.y, particle.radius * 2.8, 0, Math.PI * 2);  
+      magicCtx.fillStyle = `rgba(180,200,230,${alpha * 0.12})`;  
+      magicCtx.fill();  
+    }  
+  
+    if (  
+      particle.y < -20 ||  
+      particle.x < -20 ||  
+      particle.x > width + 20  
+    ) {  
+      Object.assign(particle, createParticle());  
+      particle.y = height + random(5, 40);  
+    }  
+  });  
+  
+  magicCtx.shadowBlur = 0;  
+}  
+  
+  
+/* DRAW RAIN + LIGHTNING */  
+  
+function drawRain(timestamp = 0) {  
+  const delta = lastFrame  
+    ? Math.min(timestamp - lastFrame, 40)  
+    : 16.67;  
+  
+  lastFrame = timestamp;  
+  
+  ctx.clearRect(0, 0, width, height);  
+  
+  wind += random(-0.006, 0.006);  
+  wind = Math.max(-1.5, Math.min(-0.35, wind));  
+  
+  drops.forEach(drop => {  
+    const dx = wind * drop.drift;  
+  
+    ctx.beginPath();  
+    ctx.moveTo(drop.x, drop.y);  
+    ctx.lineTo(drop.x + dx * 1.7, drop.y + drop.length);  
+  
+    ctx.strokeStyle = `rgba(195,215,238,${drop.opacity})`;  
+    ctx.lineWidth = drop.thickness;  
+    ctx.lineCap = "round";  
+    ctx.stroke();  
+  
+    drop.x += dx * (delta / 16.67);  
+    drop.y += drop.speed * (delta / 16.67);  
+  
+    if (  
+      drop.y > height + drop.length ||  
+      drop.x < -40 ||  
+      drop.x > width + 40  
+    ) {  
+      Object.assign(drop, createDrop());  
+    }  
+  });  
+  
+  drawMagicParticles(delta);  
+  
+  updateLightning(delta);  
+  
+  if (lightningActive && lightningBolts.length && lightningFlash > 0.015) {  
+    ctx.save();  
+  
+    lightningBolts.forEach((bolt, index) => {  
+      drawBolt(  
+        bolt,  
+        Math.min(1, lightningFlash * (index === 0 ? 5 : 3)),  
+        index === 0  
+      );  
+    });  
+  
+    ctx.restore();  
+  }  
+  
+  requestAnimationFrame(drawRain);  
+}  
+  
+  
+/* INITIALIZE */  
+  
+function initializeEffects() {  
+  resizeRain();  
+  resizeMagic();  
+  
+  nextLightning = Date.now() + random(5000, 11000);  
+  
+  drawRain();  
+}  
+  
+window.addEventListener("resize", () => {  
+  resizeRain();  
+  resizeMagic();  
+});  
+  
+initializeEffects();  
+  
+</script>  </body>  
+</html>  
