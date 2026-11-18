@@ -60,6 +60,70 @@ body::before {
     );
 }
 
+/* MOONLIGHT */
+
+#moonlight {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+
+  background:
+    radial-gradient(
+      ellipse at 50% -15%,
+      rgba(150,165,195,0.105) 0%,
+      rgba(95,110,145,0.035) 30%,
+      transparent 62%
+    );
+
+  opacity: 0.8;
+}
+
+/* DARK FANTASY FOG */
+
+#fog {
+  position: fixed;
+  inset: -25%;
+  z-index: 2;
+  pointer-events: none;
+  overflow: hidden;
+  opacity: 0.24;
+
+  background:
+    radial-gradient(
+      ellipse at 20% 55%,
+      rgba(150,160,180,0.14) 0%,
+      transparent 42%
+    ),
+    radial-gradient(
+      ellipse at 75% 35%,
+      rgba(115,130,155,0.12) 0%,
+      transparent 38%
+    ),
+    radial-gradient(
+      ellipse at 50% 85%,
+      rgba(130,140,160,0.10) 0%,
+      transparent 45%
+    );
+
+  filter: blur(55px);
+  animation: fogDrift 32s ease-in-out infinite alternate;
+}
+
+@keyframes fogDrift {
+  0% {
+    transform: translate3d(-4%, 2%, 0) scale(1);
+  }
+
+  50% {
+    transform: translate3d(3%, -2%, 0) scale(1.08);
+  }
+
+  100% {
+    transform: translate3d(5%, 3%, 0) scale(1.03);
+  }
+}
+
 /* LIGHTNING ATMOSPHERE */
 
 #stormGlow {
@@ -94,6 +158,17 @@ body::before {
   50% { transform: translate(1%,-1%); }
   75% { transform: translate(-1%,-1%); }
   100% { transform: translate(1%,1%); }
+}
+
+/* MAGIC PARTICLES */
+
+#magicParticles {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 3;
+  pointer-events: none;
 }
 
 /* MAIN CONTENT */
@@ -306,12 +381,26 @@ video {
   .typing-text {
     font-size: 25px;
   }
+
+  #fog {
+    opacity: 0.19;
+    filter: blur(38px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #fog,
+  #filmGrain {
+    animation-duration: 60s;
+  }
 }
 </style>
 </head>
 
 <body>
 
+<div id="moonlight"></div>
+<div id="fog"></div>
 <div id="filmGrain"></div>
 <div id="stormGlow"></div>
 
@@ -357,6 +446,7 @@ video {
 
 </div>
 
+<canvas id="magicParticles"></canvas>
 <canvas id="rain"></canvas>
 
 <script>
@@ -454,6 +544,12 @@ function typeMessage() {
 typeMessage();
 
 
+/* SHARED HELPERS */
+
+const random = (min, max) =>
+  Math.random() * (max - min) + min;
+
+
 /* REALISTIC RAIN + RANDOM LIGHTNING */
 
 const canvas = document.getElementById("rain");
@@ -471,13 +567,6 @@ let nextLightning = 0;
 let lightningActive = false;
 
 let lastFrame = 0;
-let animationId = null;
-
-const random = (min, max) =>
-  Math.random() * (max - min) + min;
-
-
-/* CREATE RAIN DROP */
 
 function createDrop(initial = false) {
   const depth = Math.random();
@@ -495,9 +584,6 @@ function createDrop(initial = false) {
     drift: random(0.7, 1.6) + depth * 0.7
   };
 }
-
-
-/* RESIZE CANVAS */
 
 function resizeRain() {
   const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
@@ -565,10 +651,7 @@ function createBolt(x, y, length, spread, depth = 0) {
     }
   }
 
-  return {
-    points,
-    branches
-  };
+  return { points, branches };
 }
 
 
@@ -584,7 +667,6 @@ function drawBolt(bolt, alpha, main = false) {
 
   for (let i = 1; i < bolt.points.length; i++) {
     const point = bolt.points[i];
-
     ctx.lineTo(point.x, point.y);
   }
 
@@ -623,7 +705,6 @@ function startLightning() {
   lightningFlash = random(0.13, 0.24);
   lightningActive = true;
 
-  // Occasionally create a second distant bolt
   if (Math.random() > 0.68) {
     lightningBolts.push(
       createBolt(
@@ -644,13 +725,9 @@ function updateLightning(delta) {
 
   if (!lightningActive && now >= nextLightning) {
     startLightning();
-
-    nextLightning =
-      now + random(9000, 23000);
   }
 
   if (lightningActive) {
-    // Smoothly fade the flash
     lightningFlash *= Math.pow(0.91, delta / 16.67);
 
     if (lightningFlash < 0.008) {
@@ -658,13 +735,127 @@ function updateLightning(delta) {
       lightningActive = false;
       lightningBolts = [];
 
-      // Random waiting time between storms
       nextLightning =
         now + random(9000, 23000);
     }
   }
 
   stormGlow.style.opacity = lightningFlash;
+}
+
+
+/* MAGIC PARTICLES */
+
+const magicCanvas = document.getElementById("magicParticles");
+const magicCtx = magicCanvas.getContext("2d");
+
+let particles = [];
+
+function createParticle(initial = false) {
+  return {
+    x: random(0, width),
+    y: initial ? random(0, height) : height + random(5, 40),
+
+    radius: random(0.5, 1.5),
+
+    speedY: random(0.12, 0.42),
+    speedX: random(-0.16, 0.16),
+
+    opacity: random(0.15, 0.65),
+    phase: random(0, Math.PI * 2),
+    twinkleSpeed: random(0.008, 0.025)
+  };
+}
+
+function resizeMagic() {
+  const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+
+  magicCanvas.width = Math.floor(width * dpr);
+  magicCanvas.height = Math.floor(height * dpr);
+
+  magicCanvas.style.width = width + "px";
+  magicCanvas.style.height = height + "px";
+
+  magicCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+  const count = Math.min(
+    42,
+    Math.max(18, Math.floor(width * height / 24000))
+  );
+
+  particles = Array.from(
+    { length: count },
+    () => createParticle(true)
+  );
+}
+
+function drawMagicParticles(delta) {
+  magicCtx.clearRect(0, 0, width, height);
+
+  const frameScale = delta / 16.67;
+
+  particles.forEach(particle => {
+    particle.phase += particle.twinkleSpeed * frameScale;
+
+    particle.x += particle.speedX * frameScale;
+    particle.y -= particle.speedY * frameScale;
+
+    const twinkle =
+      0.35 + Math.sin(particle.phase) * 0.35;
+
+    const alpha = Math.max(
+      0,
+      particle.opacity * twinkle
+    );
+
+    magicCtx.beginPath();
+
+    magicCtx.arc(
+      particle.x,
+      particle.y,
+      particle.radius,
+      0,
+      Math.PI * 2
+    );
+
+    magicCtx.fillStyle =
+      `rgba(205,220,245,${alpha})`;
+
+    magicCtx.shadowBlur = 9;
+    magicCtx.shadowColor =
+      "rgba(175,200,235,0.65)";
+
+    magicCtx.fill();
+
+    // Tiny glow around brighter particles
+    if (particle.radius > 1.1) {
+      magicCtx.beginPath();
+
+      magicCtx.arc(
+        particle.x,
+        particle.y,
+        particle.radius * 2.8,
+        0,
+        Math.PI * 2
+      );
+
+      magicCtx.fillStyle =
+        `rgba(180,200,230,${alpha * 0.12})`;
+
+      magicCtx.fill();
+    }
+
+    if (
+      particle.y < -20 ||
+      particle.x < -20 ||
+      particle.x > width + 20
+    ) {
+      Object.assign(particle, createParticle());
+      particle.y = height + random(5, 40);
+    }
+  });
+
+  magicCtx.shadowBlur = 0;
 }
 
 
@@ -679,11 +870,9 @@ function drawRain(timestamp = 0) {
 
   ctx.clearRect(0, 0, width, height);
 
-  // Slight wind variation
   wind += random(-0.006, 0.006);
   wind = Math.max(-1.5, Math.min(-0.35, wind));
 
-  // Draw rain
   drops.forEach(drop => {
     const dx = wind * drop.drift;
 
@@ -716,7 +905,10 @@ function drawRain(timestamp = 0) {
     }
   });
 
-  // Update and render lightning
+  // Magic particles
+  drawMagicParticles(delta);
+
+  // Lightning
   updateLightning(delta);
 
   if (lightningActive && lightningBolts.length) {
@@ -735,19 +927,27 @@ function drawRain(timestamp = 0) {
     ctx.restore();
   }
 
-  animationId = requestAnimationFrame(drawRain);
+  requestAnimationFrame(drawRain);
 }
 
 
 /* INITIALIZE */
 
-window.addEventListener("resize", resizeRain);
+function initializeEffects() {
+  resizeRain();
+  resizeMagic();
 
-resizeRain();
+  nextLightning = Date.now() + random(5000, 10000);
 
-nextLightning = Date.now() + random(5000, 10000);
+  drawRain();
+}
 
-drawRain();
+window.addEventListener("resize", () => {
+  resizeRain();
+  resizeMagic();
+});
+
+initializeEffects();
 
 </script>
 
