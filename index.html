@@ -598,7 +598,7 @@ function drawBolt(bolt, alpha, main = false) {
 function createFlashSequence() {  
   const flashes = [];  
   
-  const count = Math.random() > 0.58 ? 3 : 2;  
+  const count = Math.random() > 0.35 ? 3 : 2;  
   
   for (let i = 0; i < count; i++) {  
     flashes.push({  
@@ -699,7 +699,7 @@ function updateLightning(delta) {
       lightningActive = false;  
       lightningBolts = [];  
   
-      nextLightning = now + random(7500, 24000);  
+      nextLightning = now + random(5000, 16000);  
     }  
   }  
   
